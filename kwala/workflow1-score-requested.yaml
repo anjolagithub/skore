@@ -21,7 +21,7 @@ Trigger:
 Actions:
   - Name: call_scoring_api
     Type: post
-    APIEndpoint: https://778b-102-89-85-247.ngrok-free.app/score
+    APIEndpoint: https://skore-rliw.onrender.com/score
     APIPayload:
       wallet: "0x0000000000000000000000000000000000000000"
     TargetContract: NA
