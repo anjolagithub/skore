@@ -171,8 +171,9 @@ cd skore
 
 forge install OpenZeppelin/openzeppelin-contracts
 forge install foundry-rs/forge-std
-
-🔗 How It Works (End-to-End)
+```
+---
+## 🔗 How It Works (End-to-End)
 User submits wallet address
 Contract emits ScoreRequested
 Kwala triggers scoring API
@@ -185,7 +186,7 @@ User receives Telegram notification
 
 
 
-💼 Business Model
+## 💼 Business Model
 Target Users
 Unbanked individuals in Africa
 DeFi-native users without formal credit history
@@ -199,9 +200,10 @@ API access fees for lenders
 Credit scoring queries
 Premium analytics
 
-🏁 Summary
+## 🏁 Summary
 
 Skoré transforms on-chain activity into trust.
 
 A wallet is no longer just an address —
 it becomes a verifiable financial identity.
+---
