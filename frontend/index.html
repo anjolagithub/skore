@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Skoré — Decentralised Credit Protocol</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #080808;
+      --surface: #111111;
+      --surface2: #1a1a1a;
+      --border: #222222;
+      --accent: #c8f55a;
+      --accent2: #ff6b35;
+      --text: #f0ece4;
+      --muted: #555555;
+      --muted2: #888888;
+      --excellent: #c8f55a;
+      --good: #4ade80;
+      --fair: #fbbf24;
+      --poor: #f97316;
+      --verypoor: #ef4444;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Background grid */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(200,245,90,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(200,245,90,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Noise texture */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      opacity: 0.4;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--border);
+      background: rgba(8,8,8,0.85);
+      backdrop-filter: blur(16px);
+    }
+
+    .nav-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--text);
+    }
+
+    .logo span {
+      color: var(--accent);
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--muted2);
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 4px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .connect-btn {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      font-weight: 500;
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.02em;
+    }
+
+    .connect-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+    .connect-btn.connected {
+      background: transparent;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+    }
+
+    /* HERO */
+    .hero {
+      padding-top: 140px;
+      padding-bottom: 80px;
+    }
+
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 32px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    .hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(48px, 8vw, 96px);
+      font-weight: 800;
+      line-height: 0.9;
+      letter-spacing: -3px;
+      margin-bottom: 32px;
+    }
+
+    .hero h1 .dim { color: var(--muted); }
+    .hero h1 .accent { color: var(--accent); }
+
+    .hero-sub {
+      font-size: 16px;
+      color: var(--muted2);
+      max-width: 520px;
+      line-height: 1.7;
+      margin-bottom: 48px;
+      font-weight: 300;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      border-left: 2px solid var(--border);
+      padding-left: 16px;
+    }
+
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--muted2);
+      margin-top: 4px;
+      font-weight: 300;
+    }
+
+    /* MAIN SCORE CARD */
+    .score-section {
+      padding: 80px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 40px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .score-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    @media (max-width: 768px) {
+      .score-layout { grid-template-columns: 1fr; }
+    }
+
+    .score-input-panel {
+      background: var(--surface);
+      padding: 48px;
+    }
+
+    .score-result-panel {
+      background: var(--surface2);
+      padding: 48px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 480px;
+    }
+
+    .panel-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .panel-subtitle {
+      font-size: 13px;
+      color: var(--muted2);
+      margin-bottom: 36px;
+      line-height: 1.6;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--muted2);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .wallet-input {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .wallet-input:focus { border-color: var(--accent); }
+    .wallet-input::placeholder { color: var(--muted); }
+
+    .score-btn {
+      width: 100%;
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      border-radius: 8px;
+      padding: 16px;
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 8px;
+      letter-spacing: 0.02em;
+    }
+
+    .score-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+    .score-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+    .or-divider {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      margin: 16px 0;
+      font-family: 'DM Mono', monospace;
+    }
+
+    .check-btn {
+      width: 100%;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      color: var(--muted2);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .check-btn:hover { border-color: var(--muted2); color: var(--text); }
+
+    /* SCORE DISPLAY */
+    .score-empty {
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .score-empty-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.3;
+    }
+
+    .score-empty-text {
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .score-display {
+      width: 100%;
+      display: none;
+    }
+
+    .score-display.visible { display: block; }
+
+    .score-big {
+      font-family: 'Syne', sans-serif;
+      font-size: 96px;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -4px;
+      text-align: center;
+      margin-bottom: 8px;
+      transition: color 0.5s;
+    }
+
+    .score-label-badge {
+      display: inline-block;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 100px;
+      margin-bottom: 32px;
+    }
+
+    .score-gauge {
+      width: 100%;
+      height: 6px;
+      background: var(--border);
+      border-radius: 100px;
+      margin-bottom: 32px;
+      overflow: hidden;
+    }
+
+    .score-gauge-fill {
+      height: 100%;
+      border-radius: 100px;
+      transition: width 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .score-breakdown {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .breakdown-item {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+    }
+
+    .breakdown-key {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 4px;
+    }
+
+    .breakdown-val {
+      font-family: 'Syne', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .breakdown-val.positive { color: var(--accent); }
+
+    /* STATUS MESSAGES */
+    .status-msg {
+      margin-top: 16px;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: 'DM Mono', monospace;
+      display: none;
+    }
+
+    .status-msg.loading {
+      background: rgba(200,245,90,0.05);
+      border: 1px solid rgba(200,245,90,0.2);
+      color: var(--accent);
+      display: block;
+    }
+
+    .status-msg.error {
+      background: rgba(239,68,68,0.05);
+      border: 1px solid rgba(239,68,68,0.2);
+      color: #ef4444;
+      display: block;
+    }
+
+    .status-msg.success {
+      background: rgba(200,245,90,0.05);
+      border: 1px solid rgba(200,245,90,0.2);
+      color: var(--accent);
+      display: block;
+    }
+
+    /* HOW IT WORKS */
+    .how-section {
+      padding: 80px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-top: 40px;
+    }
+
+    @media (max-width: 768px) {
+      .steps { grid-template-columns: 1fr 1fr; }
+    }
+
+    .step {
+      background: var(--surface);
+      padding: 32px 28px;
+      transition: background 0.2s;
+    }
+
+    .step:hover { background: var(--surface2); }
+
+    .step-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 48px;
+      font-weight: 800;
+      color: var(--border);
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+
+    .step-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .step-desc {
+      font-size: 13px;
+      color: var(--muted2);
+      line-height: 1.6;
+    }
+
+    /* CONTRACTS */
+    .contracts-section {
+      padding: 80px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .contracts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-top: 40px;
+    }
+
+    @media (max-width: 600px) {
+      .contracts-grid { grid-template-columns: 1fr; }
+    }
+
+    .contract-card {
+      background: var(--surface);
+      padding: 32px;
+    }
+
+    .contract-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(200,245,90,0.08);
+      border: 1px solid rgba(200,245,90,0.2);
+      padding: 3px 8px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: 16px;
+    }
+
+    .contract-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .contract-desc {
+      font-size: 13px;
+      color: var(--muted2);
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .contract-addr {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--muted2);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      border-radius: 6px;
+      word-break: break-all;
+      line-height: 1.5;
+    }
+
+    .contract-addr a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .contract-addr a:hover { text-decoration: underline; }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 0;
+      margin-top: 40px;
+    }
+
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: gap;
+      gap: 16px;
+    }
+
+    .footer-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 16px;
+    }
+
+    .footer-logo span { color: var(--accent); }
+
+    .footer-right {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* LOADING ANIMATION */
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .loading-dots::after {
+      content: '...';
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+
+    /* SCORE COLORS */
+    .c-excellent { color: var(--excellent); }
+    .c-good { color: var(--good); }
+    .c-fair { color: var(--fair); }
+    .c-poor { color: var(--poor); }
+    .c-verypoor { color: var(--verypoor); }
+
+    .bg-excellent { background: rgba(200,245,90,0.15); border-color: rgba(200,245,90,0.3); color: var(--excellent); }
+    .bg-good { background: rgba(74,222,128,0.15); border-color: rgba(74,222,128,0.3); color: var(--good); }
+    .bg-fair { background: rgba(251,191,36,0.15); border-color: rgba(251,191,36,0.3); color: var(--fair); }
+    .bg-poor { background: rgba(249,115,22,0.15); border-color: rgba(249,115,22,0.3); color: var(--poor); }
+    .bg-verypoor { background: rgba(239,68,68,0.15); border-color: rgba(239,68,68,0.3); color: var(--verypoor); }
+
+    /* TX HASH */
+    .tx-link {
+      display: block;
+      margin-top: 16px;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--muted2);
+      text-align: center;
+    }
+
+    .tx-link a { color: var(--accent); text-decoration: none; }
+    .tx-link a:hover { text-decoration: underline; }
+
+    /* ANIMATE IN */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-eyebrow { animation: fadeUp 0.6s ease both; }
+    .hero h1 { animation: fadeUp 0.6s 0.1s ease both; }
+    .hero-sub { animation: fadeUp 0.6s 0.2s ease both; }
+    .hero-stats { animation: fadeUp 0.6s 0.3s ease both; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <div class="logo">Sko<span>ré</span></div>
+    <div class="nav-right">
+      <span class="nav-tag">Base Sepolia</span>
+      <button class="connect-btn" id="connectBtn" onclick="connectWallet()">
+        Connect Wallet
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="container">
+  <section class="hero">
+    <div class="hero-eyebrow">Decentralised Credit Protocol</div>
+    <h1>
+      Your chain<br>
+      <span class="dim">is your</span><br>
+      <span class="accent">credit.</span>
+    </h1>
+    <p class="hero-sub">
+      Skoré reads your on-chain history across Ethereum, Polygon, and Base
+      to generate a verifiable credit score — stored as a Soulbound Token.
+      No bank required.
+    </p>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num">300–850</div>
+        <div class="stat-label">Score range</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">3 chains</div>
+        <div class="stat-label">Indexed simultaneously</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">On-chain</div>
+        <div class="stat-label">Soulbound & verifiable</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCORE SECTION -->
+  <section class="score-section">
+    <div class="section-label">Get Your Score</div>
+
+    <div class="score-layout">
+
+      <!-- INPUT PANEL -->
+      <div class="score-input-panel">
+        <div class="panel-title">Request Credit Score</div>
+        <p class="panel-subtitle">
+          Enter any EVM wallet address. We'll analyse its on-chain history
+          and mint your score as a Soulbound Token.
+        </p>
+
+        <div class="input-group">
+          <label class="input-label">Wallet Address</label>
+          <input
+            type="text"
+            class="wallet-input"
+            id="walletInput"
+            placeholder="0x..."
+          />
+        </div>
+
+        <button class="score-btn" id="requestBtn" onclick="requestScore()">
+          Generate Score
+        </button>
+
+        <div class="or-divider">— or —</div>
+
+        <button class="check-btn" onclick="checkExistingScore()">
+          Check existing score
+        </button>
+
+        <div class="status-msg" id="statusMsg"></div>
+      </div>
+
+      <!-- RESULT PANEL -->
+      <div class="score-result-panel" id="resultPanel">
+
+        <!-- Empty state -->
+        <div class="score-empty" id="emptyState">
+          <div class="score-empty-icon">◎</div>
+          <div class="score-empty-text">Enter a wallet to see its score</div>
+        </div>
+
+        <!-- Score display -->
+        <div class="score-display" id="scoreDisplay">
+          <div style="text-align:center; margin-bottom: 8px;">
+            <div class="score-big" id="scoreBig">—</div>
+            <span class="score-label-badge" id="scoreBadge">—</span>
+          </div>
+
+          <div class="score-gauge">
+            <div class="score-gauge-fill" id="scoreGauge" style="width:0%"></div>
+          </div>
+
+          <div class="score-breakdown" id="scoreBreakdown"></div>
+
+          <div class="tx-link" id="txLink"></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how-section">
+    <div class="section-label">How It Works</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-title">Request Score</div>
+        <div class="step-desc">Submit your wallet address. Our oracle reads your on-chain history across Ethereum, Polygon, and Base.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-title">Algorithm Runs</div>
+        <div class="step-desc">We analyse wallet age, transaction consistency, DeFi participation, token diversity, and cross-chain activity.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-title">Score Minted</div>
+        <div class="step-desc">Your score (300–850) is stored as a non-transferable Soulbound Token on Base Sepolia. Permanently yours.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-title">Lenders Query</div>
+        <div class="step-desc">Fintechs and DeFi protocols query your score via API to make lending decisions — without a bank account.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTRACTS -->
+  <section class="contracts-section">
+    <div class="section-label">Live Contracts — Base Sepolia</div>
+    <div class="contracts-grid">
+      <div class="contract-card">
+        <div class="contract-tag">ERC-721 Soulbound</div>
+        <div class="contract-name">SkoreSBT</div>
+        <div class="contract-desc">Non-transferable credit score token. One per wallet. Stores score, wallet age, DeFi history, and chain count on-chain.</div>
+        <div class="contract-addr">
+          <a href="https://sepolia.basescan.org/address/0xCC0B4686de40Ff5ae1e0B8d58Da9175e9090610D#code" target="_blank">
+            0xCC0B4686de40Ff5ae1e0B8d58Da9175e9090610D ↗
+          </a>
+        </div>
+      </div>
+      <div class="contract-card">
+        <div class="contract-tag">Trusted Oracle</div>
+        <div class="contract-name">SkoreOracle</div>
+        <div class="contract-desc">Receives computed scores from the off-chain API and forwards to SkoreSBT. Duplicate request protection via request IDs.</div>
+        <div class="contract-addr">
+          <a href="https://sepolia.basescan.org/address/0xF77cEEa40d44C4b7c5dFF7DD31dc0E281FaFeE55#code" target="_blank">
+            0xF77cEEa40d44C4b7c5dFF7DD31dc0E281FaFeE55 ↗
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">Sko<span>ré</span></div>
+    <div class="footer-right">
+      Built for Schulltech × Kwala Hackathon 2026
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ── CONFIG — replace with your Railway API URL ──
+  const API_URL = "YOUR_RAILWAY_API_URL";
+  // Example: const API_URL = "https://skore-api-production.up.railway.app";
+
+  let provider, signer;
+
+  // ── WALLET CONNECTION ──
+  async function connectWallet() {
+    if (!window.ethereum) return alert("Please install MetaMask");
+    try {
+      await window.ethereum.request({ method: 'eth_requestAccounts' });
+      const { ethers } = await import("https://cdn.jsdelivr.net/npm/ethers@6.9.0/dist/ethers.min.js");
+      provider = new ethers.BrowserProvider(window.ethereum);
+      signer = await provider.getSigner();
+      const addr = await signer.getAddress();
+      const btn = document.getElementById('connectBtn');
+      btn.textContent = addr.slice(0,6) + "..." + addr.slice(-4);
+      btn.classList.add('connected');
+      // Auto-fill wallet input
+      document.getElementById('walletInput').value = addr;
+    } catch (e) {
+      alert("Connection failed: " + e.message);
+    }
+  }
+
+  // ── SCORE COLOR HELPERS ──
+  function getScoreColor(score) {
+    if (score >= 750) return 'excellent';
+    if (score >= 670) return 'good';
+    if (score >= 580) return 'fair';
+    if (score >= 500) return 'poor';
+    return 'verypoor';
+  }
+
+  function getGaugeColor(score) {
+    if (score >= 750) return '#c8f55a';
+    if (score >= 670) return '#4ade80';
+    if (score >= 580) return '#fbbf24';
+    if (score >= 500) return '#f97316';
+    return '#ef4444';
+  }
+
+  // ── DISPLAY SCORE ──
+  function displayScore(data, txHash) {
+    document.getElementById('emptyState').style.display = 'none';
+    const display = document.getElementById('scoreDisplay');
+    display.classList.add('visible');
+
+    const score = data.score;
+    const label = data.label;
+    const colorClass = getScoreColor(score);
+    const gaugeColor = getGaugeColor(score);
+    const gaugeWidth = ((score - 300) / 550) * 100;
+
+    // Big score number
+    const scoreBig = document.getElementById('scoreBig');
+    scoreBig.textContent = score;
+    scoreBig.className = `score-big c-${colorClass}`;
+
+    // Badge
+    const badge = document.getElementById('scoreBadge');
+    badge.textContent = label;
+    badge.className = `score-label-badge bg-${colorClass}`;
+
+    // Gauge
+    const gauge = document.getElementById('scoreGauge');
+    setTimeout(() => {
+      gauge.style.width = gaugeWidth + '%';
+      gauge.style.background = gaugeColor;
+    }, 100);
+
+    // Breakdown
+    const breakdown = document.getElementById('scoreBreakdown');
+    const items = [
+      { key: 'Total TXs', val: data.totalTransactions?.toLocaleString() || '—' },
+      { key: 'Wallet Age', val: data.walletAgeMonths ? data.walletAgeMonths + ' months' : '—' },
+      { key: 'DeFi History', val: data.hasDefiHistory ? '✓ Yes' : '✗ No', positive: data.hasDefiHistory },
+      { key: 'Chain Count', val: data.chainCount ? data.chainCount + ' chains' : '—' },
+    ];
+
+    breakdown.innerHTML = items.map(item => `
+      <div class="breakdown-item">
+        <div class="breakdown-key">${item.key}</div>
+        <div class="breakdown-val ${item.positive ? 'positive' : ''}">${item.val}</div>
+      </div>
+    `).join('');
+
+    // TX hash link
+    if (txHash) {
+      document.getElementById('txLink').innerHTML = `
+        Minted on-chain →
+        <a href="https://sepolia.basescan.org/tx/${txHash}" target="_blank">
+          ${txHash.slice(0,10)}...${txHash.slice(-6)} ↗
+        </a>
+      `;
+    }
+  }
+
+  // ── STATUS MESSAGES ──
+  function setStatus(type, msg) {
+    const el = document.getElementById('statusMsg');
+    el.className = `status-msg ${type}`;
+    el.textContent = msg;
+  }
+
+  function clearStatus() {
+    const el = document.getElementById('statusMsg');
+    el.className = 'status-msg';
+    el.textContent = '';
+  }
+
+  // ── REQUEST NEW SCORE ──
+  async function requestScore() {
+    const wallet = document.getElementById('walletInput').value.trim();
+    if (!wallet) return setStatus('error', 'Please enter a wallet address');
+    if (!wallet.startsWith('0x') || wallet.length !== 42) {
+      return setStatus('error', 'Invalid wallet address format');
+    }
+
+    const btn = document.getElementById('requestBtn');
+    btn.disabled = true;
+    btn.textContent = 'Analysing wallet';
+    btn.style.position = 'relative';
+    setStatus('loading', '⏳ Reading on-chain history across 3 networks...');
+
+    try {
+      const res = await fetch(`${API_URL}/score`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ wallet })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || data.error) {
+        throw new Error(data.details || data.error || 'Scoring failed');
+      }
+
+      setStatus('success', '✓ Score minted on-chain successfully');
+      displayScore(data, data.txHash);
+
+    } catch (e) {
+      setStatus('error', '✗ ' + e.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Generate Score';
+    }
+  }
+
+  // ── CHECK EXISTING SCORE ──
+  async function checkExistingScore() {
+    const wallet = document.getElementById('walletInput').value.trim();
+    if (!wallet) return setStatus('error', 'Please enter a wallet address');
+    if (!wallet.startsWith('0x') || wallet.length !== 42) {
+      return setStatus('error', 'Invalid wallet address format');
+    }
+
+    setStatus('loading', '⏳ Fetching score from chain...');
+
+    try {
+      const res = await fetch(`${API_URL}/score/${wallet}`);
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || 'Failed to fetch score');
+
+      if (!data.hasScore) {
+        setStatus('error', 'No score found. Click "Generate Score" to create one.');
+        return;
+      }
+
+      clearStatus();
+      displayScore(data, null);
+
+    } catch (e) {
+      setStatus('error', '✗ ' + e.message);
+    }
+  }
+
+  // Allow Enter key to trigger score request
+  document.getElementById('walletInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') requestScore();
+  });
+</script>
+</body>
+</html>
