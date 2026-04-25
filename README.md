@@ -165,7 +165,7 @@ skore/
 
 ### Installation
 
-```bash
+```
 git clone https://github.com/your-repo/skore
 cd skore
 
@@ -181,6 +181,9 @@ Score is calculated
 Oracle updates contract
 SBT is minted/updated
 User receives Telegram notification
+
+
+
 
 💼 Business Model
 Target Users
