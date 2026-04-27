@@ -34,7 +34,6 @@
       overflow-x: hidden;
     }
 
-    /* Background grid */
     body::before {
       content: '';
       position: fixed;
@@ -47,7 +46,6 @@
       z-index: 0;
     }
 
-    /* Noise texture */
     body::after {
       content: '';
       position: fixed;
@@ -93,10 +91,7 @@
       letter-spacing: -0.5px;
       color: var(--text);
     }
-
-    .logo span {
-      color: var(--accent);
-    }
+    .logo span { color: var(--accent); }
 
     .nav-right {
       display: flex;
@@ -128,7 +123,6 @@
       transition: all 0.2s;
       letter-spacing: 0.02em;
     }
-
     .connect-btn:hover { opacity: 0.85; transform: translateY(-1px); }
     .connect-btn.connected {
       background: transparent;
@@ -153,7 +147,6 @@
       align-items: center;
       gap: 10px;
     }
-
     .hero-eyebrow::before {
       content: '';
       display: inline-block;
@@ -170,7 +163,6 @@
       letter-spacing: -3px;
       margin-bottom: 32px;
     }
-
     .hero h1 .dim { color: var(--muted); }
     .hero h1 .accent { color: var(--accent); }
 
@@ -193,7 +185,6 @@
       border-left: 2px solid var(--border);
       padding-left: 16px;
     }
-
     .stat-num {
       font-family: 'Syne', sans-serif;
       font-size: 28px;
@@ -201,7 +192,6 @@
       color: var(--text);
       line-height: 1;
     }
-
     .stat-label {
       font-size: 12px;
       color: var(--muted2);
@@ -209,7 +199,7 @@
       font-weight: 300;
     }
 
-    /* MAIN SCORE CARD */
+    /* SCORE SECTION */
     .score-section {
       padding: 80px 0;
       border-top: 1px solid var(--border);
@@ -226,7 +216,6 @@
       align-items: center;
       gap: 12px;
     }
-
     .section-label::after {
       content: '';
       flex: 1;
@@ -277,9 +266,47 @@
       line-height: 1.6;
     }
 
-    .input-group {
-      margin-bottom: 20px;
+    /* FLOW STEPS indicator */
+    .flow-steps {
+      display: flex;
+      gap: 0;
+      margin-bottom: 32px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
     }
+
+    .flow-step {
+      flex: 1;
+      padding: 10px 8px;
+      text-align: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: var(--bg);
+      border-right: 1px solid var(--border);
+      transition: all 0.3s;
+      position: relative;
+    }
+    .flow-step:last-child { border-right: none; }
+    .flow-step.active {
+      color: var(--accent);
+      background: rgba(200,245,90,0.06);
+    }
+    .flow-step.done {
+      color: var(--good);
+      background: rgba(74,222,128,0.04);
+    }
+    .flow-step-num {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .input-group { margin-bottom: 20px; }
 
     .input-label {
       font-family: 'DM Mono', monospace;
@@ -303,10 +330,14 @@
       outline: none;
       transition: border-color 0.2s;
     }
-
     .wallet-input:focus { border-color: var(--accent); }
     .wallet-input::placeholder { color: var(--muted); }
+    .wallet-input:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
 
+    /* Web3 CTA button */
     .score-btn {
       width: 100%;
       background: var(--accent);
@@ -321,10 +352,32 @@
       transition: all 0.2s;
       margin-top: 8px;
       letter-spacing: 0.02em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
     }
-
     .score-btn:hover { opacity: 0.85; transform: translateY(-1px); }
     .score-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+    .metamask-icon {
+      font-size: 18px;
+    }
+
+    .wallet-required-note {
+      margin-top: 12px;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--muted);
+      text-align: center;
+      letter-spacing: 0.05em;
+    }
+    .wallet-required-note a {
+      color: var(--accent);
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .wallet-required-note a:hover { text-decoration: underline; }
 
     .or-divider {
       text-align: center;
@@ -346,31 +399,98 @@
       cursor: pointer;
       transition: all 0.2s;
     }
-
     .check-btn:hover { border-color: var(--muted2); color: var(--text); }
+
+    /* STATUS MESSAGES */
+    .status-msg {
+      margin-top: 16px;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: 'DM Mono', monospace;
+      display: none;
+      line-height: 1.5;
+    }
+    .status-msg.loading {
+      background: rgba(200,245,90,0.05);
+      border: 1px solid rgba(200,245,90,0.2);
+      color: var(--accent);
+      display: block;
+    }
+    .status-msg.error {
+      background: rgba(239,68,68,0.05);
+      border: 1px solid rgba(239,68,68,0.2);
+      color: #ef4444;
+      display: block;
+    }
+    .status-msg.success {
+      background: rgba(200,245,90,0.05);
+      border: 1px solid rgba(200,245,90,0.2);
+      color: var(--accent);
+      display: block;
+    }
+
+    /* PROGRESS BAR for polling */
+    .poll-progress {
+      display: none;
+      margin-top: 12px;
+    }
+    .poll-progress.visible { display: block; }
+    .poll-bar-bg {
+      height: 3px;
+      background: var(--border);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+    .poll-bar-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 100px;
+      transition: width 0.5s ease;
+      width: 0%;
+    }
+    .poll-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      color: var(--muted);
+      margin-top: 6px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* TX CONFIRMATION BADGE */
+    .tx-confirm-badge {
+      display: none;
+      margin-top: 12px;
+      padding: 10px 14px;
+      background: rgba(74,222,128,0.06);
+      border: 1px solid rgba(74,222,128,0.2);
+      border-radius: 6px;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--good);
+      letter-spacing: 0.05em;
+    }
+    .tx-confirm-badge.visible { display: block; }
+    .tx-confirm-badge a { color: var(--good); }
+    .tx-confirm-badge a:hover { text-decoration: underline; }
 
     /* SCORE DISPLAY */
     .score-empty {
       text-align: center;
       color: var(--muted);
     }
-
     .score-empty-icon {
       font-size: 48px;
       margin-bottom: 16px;
       opacity: 0.3;
     }
-
     .score-empty-text {
       font-size: 14px;
       color: var(--muted);
     }
 
-    .score-display {
-      width: 100%;
-      display: none;
-    }
-
+    .score-display { width: 100%; display: none; }
     .score-display.visible { display: block; }
 
     .score-big {
@@ -403,7 +523,6 @@
       margin-bottom: 32px;
       overflow: hidden;
     }
-
     .score-gauge-fill {
       height: 100%;
       border-radius: 100px;
@@ -423,7 +542,6 @@
       border-radius: 8px;
       padding: 12px;
     }
-
     .breakdown-key {
       font-family: 'DM Mono', monospace;
       font-size: 9px;
@@ -432,45 +550,48 @@
       letter-spacing: 0.1em;
       margin-bottom: 4px;
     }
-
     .breakdown-val {
       font-family: 'Syne', sans-serif;
       font-size: 16px;
       font-weight: 700;
       color: var(--text);
     }
-
     .breakdown-val.positive { color: var(--accent); }
 
-    /* STATUS MESSAGES */
-    .status-msg {
+    .tx-link {
+      display: block;
       margin-top: 16px;
-      padding: 12px 16px;
-      border-radius: 8px;
-      font-size: 13px;
       font-family: 'DM Mono', monospace;
-      display: none;
+      font-size: 11px;
+      color: var(--muted2);
+      text-align: center;
     }
+    .tx-link a { color: var(--accent); text-decoration: none; }
+    .tx-link a:hover { text-decoration: underline; }
 
-    .status-msg.loading {
-      background: rgba(200,245,90,0.05);
-      border: 1px solid rgba(200,245,90,0.2);
-      color: var(--accent);
-      display: block;
+    /* OWNED BADGE */
+    .owned-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      justify-content: center;
+      margin-bottom: 16px;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--good);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
-
-    .status-msg.error {
-      background: rgba(239,68,68,0.05);
-      border: 1px solid rgba(239,68,68,0.2);
-      color: #ef4444;
-      display: block;
+    .owned-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--good);
+      animation: blink 2s ease infinite;
     }
-
-    .status-msg.success {
-      background: rgba(200,245,90,0.05);
-      border: 1px solid rgba(200,245,90,0.2);
-      color: var(--accent);
-      display: block;
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
     }
 
     /* HOW IT WORKS */
@@ -489,7 +610,6 @@
       overflow: hidden;
       margin-top: 40px;
     }
-
     @media (max-width: 768px) {
       .steps { grid-template-columns: 1fr 1fr; }
     }
@@ -499,9 +619,7 @@
       padding: 32px 28px;
       transition: background 0.2s;
     }
-
     .step:hover { background: var(--surface2); }
-
     .step-num {
       font-family: 'Syne', sans-serif;
       font-size: 48px;
@@ -510,19 +628,23 @@
       line-height: 1;
       margin-bottom: 16px;
     }
-
     .step-title {
       font-family: 'Syne', sans-serif;
       font-size: 15px;
       font-weight: 700;
       margin-bottom: 8px;
     }
-
     .step-desc {
       font-size: 13px;
       color: var(--muted2);
       line-height: 1.6;
     }
+
+    /* highlight the user-signs step */
+    .step.highlight {
+      background: rgba(200,245,90,0.03);
+    }
+    .step.highlight .step-num { color: rgba(200,245,90,0.15); }
 
     /* CONTRACTS */
     .contracts-section {
@@ -540,7 +662,6 @@
       overflow: hidden;
       margin-top: 40px;
     }
-
     @media (max-width: 600px) {
       .contracts-grid { grid-template-columns: 1fr; }
     }
@@ -549,7 +670,6 @@
       background: var(--surface);
       padding: 32px;
     }
-
     .contract-tag {
       font-family: 'DM Mono', monospace;
       font-size: 9px;
@@ -563,21 +683,18 @@
       display: inline-block;
       margin-bottom: 16px;
     }
-
     .contract-name {
       font-family: 'Syne', sans-serif;
       font-size: 18px;
       font-weight: 700;
       margin-bottom: 8px;
     }
-
     .contract-desc {
       font-size: 13px;
       color: var(--muted2);
       margin-bottom: 20px;
       line-height: 1.6;
     }
-
     .contract-addr {
       font-family: 'DM Mono', monospace;
       font-size: 11px;
@@ -589,12 +706,7 @@
       word-break: break-all;
       line-height: 1.5;
     }
-
-    .contract-addr a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-
+    .contract-addr a { color: var(--accent); text-decoration: none; }
     .contract-addr a:hover { text-decoration: underline; }
 
     /* FOOTER */
@@ -603,7 +715,6 @@
       padding: 40px 0;
       margin-top: 40px;
     }
-
     .footer-inner {
       max-width: 1100px;
       margin: 0 auto;
@@ -611,34 +722,31 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      flex-wrap: gap;
+      flex-wrap: wrap;
       gap: 16px;
     }
-
-    .footer-logo {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800;
-      font-size: 16px;
-    }
-
+    .footer-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 16px; }
     .footer-logo span { color: var(--accent); }
+    .footer-right { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); }
 
-    .footer-right {
-      font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      color: var(--muted);
-    }
-
-    /* LOADING ANIMATION */
+    /* ANIMATIONS */
     @keyframes pulse {
       0%, 100% { opacity: 1; }
       50% { opacity: 0.4; }
     }
-
     .loading-dots::after {
       content: '...';
       animation: pulse 1.2s ease-in-out infinite;
     }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .hero-eyebrow { animation: fadeUp 0.6s ease both; }
+    .hero h1 { animation: fadeUp 0.6s 0.1s ease both; }
+    .hero-sub { animation: fadeUp 0.6s 0.2s ease both; }
+    .hero-stats { animation: fadeUp 0.6s 0.3s ease both; }
 
     /* SCORE COLORS */
     .c-excellent { color: var(--excellent); }
@@ -652,30 +760,6 @@
     .bg-fair { background: rgba(251,191,36,0.15); border-color: rgba(251,191,36,0.3); color: var(--fair); }
     .bg-poor { background: rgba(249,115,22,0.15); border-color: rgba(249,115,22,0.3); color: var(--poor); }
     .bg-verypoor { background: rgba(239,68,68,0.15); border-color: rgba(239,68,68,0.3); color: var(--verypoor); }
-
-    /* TX HASH */
-    .tx-link {
-      display: block;
-      margin-top: 16px;
-      font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      color: var(--muted2);
-      text-align: center;
-    }
-
-    .tx-link a { color: var(--accent); text-decoration: none; }
-    .tx-link a:hover { text-decoration: underline; }
-
-    /* ANIMATE IN */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .hero-eyebrow { animation: fadeUp 0.6s ease both; }
-    .hero h1 { animation: fadeUp 0.6s 0.1s ease both; }
-    .hero-sub { animation: fadeUp 0.6s 0.2s ease both; }
-    .hero-stats { animation: fadeUp 0.6s 0.3s ease both; }
   </style>
 </head>
 <body>
@@ -733,9 +817,25 @@
       <div class="score-input-panel">
         <div class="panel-title">Request Credit Score</div>
         <p class="panel-subtitle">
-          Enter any EVM wallet address. We'll analyse its on-chain history
-          and mint your score as a Soulbound Token.
+          Connect your wallet and sign a transaction. Your score is minted
+          directly to your address as a Soulbound Token — you own the transaction.
         </p>
+
+        <!-- Flow step indicator -->
+        <div class="flow-steps" id="flowSteps">
+          <div class="flow-step active" id="fStep1">
+            <span class="flow-step-num">①</span>Connect
+          </div>
+          <div class="flow-step" id="fStep2">
+            <span class="flow-step-num">②</span>Sign
+          </div>
+          <div class="flow-step" id="fStep3">
+            <span class="flow-step-num">③</span>Compute
+          </div>
+          <div class="flow-step" id="fStep4">
+            <span class="flow-step-num">④</span>Minted
+          </div>
+        </div>
 
         <div class="input-group">
           <label class="input-label">Wallet Address</label>
@@ -743,34 +843,67 @@
             type="text"
             class="wallet-input"
             id="walletInput"
-            placeholder="0x..."
+            placeholder="Connect wallet to auto-fill"
+            readonly
           />
         </div>
 
         <button class="score-btn" id="requestBtn" onclick="requestScore()">
-          Generate Score
+          <span class="metamask-icon">🦊</span>
+          <span id="requestBtnText">Connect Wallet First</span>
         </button>
+
+        <div class="wallet-required-note" id="walletNote">
+          Wallet required to sign the <code>requestScore()</code> transaction.
+          <a onclick="connectWallet()">Connect now →</a>
+        </div>
+
+        <!-- TX Confirmation badge -->
+        <div class="tx-confirm-badge" id="txBadge"></div>
+
+        <!-- Poll progress -->
+        <div class="poll-progress" id="pollProgress">
+          <div class="poll-bar-bg">
+            <div class="poll-bar-fill" id="pollBar"></div>
+          </div>
+          <div class="poll-label" id="pollLabel">Waiting for oracle...</div>
+        </div>
+
+        <div class="status-msg" id="statusMsg"></div>
 
         <div class="or-divider">— or —</div>
 
         <button class="check-btn" onclick="checkExistingScore()">
-          Check existing score
+          Check existing score for any address
         </button>
 
-        <div class="status-msg" id="statusMsg"></div>
+        <div class="input-group" style="margin-top:12px; display:none;" id="checkAddrGroup">
+          <label class="input-label">Any Wallet Address</label>
+          <input
+            type="text"
+            class="wallet-input"
+            id="checkAddrInput"
+            placeholder="0x..."
+          />
+          <button class="check-btn" style="margin-top:8px;" onclick="doCheckExisting()">
+            Fetch Score →
+          </button>
+        </div>
       </div>
 
       <!-- RESULT PANEL -->
       <div class="score-result-panel" id="resultPanel">
 
-        <!-- Empty state -->
         <div class="score-empty" id="emptyState">
           <div class="score-empty-icon">◎</div>
-          <div class="score-empty-text">Enter a wallet to see its score</div>
+          <div class="score-empty-text">Connect wallet to get your score</div>
         </div>
 
-        <!-- Score display -->
         <div class="score-display" id="scoreDisplay">
+          <div id="ownedBadge" class="owned-badge" style="display:none;">
+            <span class="owned-dot"></span>
+            Soulbound to your wallet
+          </div>
           <div style="text-align:center; margin-bottom: 8px;">
             <div class="score-big" id="scoreBig">—</div>
             <span class="score-label-badge" id="scoreBadge">—</span>
@@ -793,25 +926,25 @@
   <section class="how-section">
     <div class="section-label">How It Works</div>
     <div class="steps">
-      <div class="step">
+      <div class="step highlight">
         <div class="step-num">01</div>
-        <div class="step-title">Request Score</div>
-        <div class="step-desc">Submit your wallet address. Our oracle reads your on-chain history across Ethereum, Polygon, and Base.</div>
+        <div class="step-title">You Sign</div>
+        <div class="step-desc">Connect MetaMask and call <code style="color:var(--accent);font-size:11px;">requestScore()</code> on-chain. Your wallet initiates the transaction — not ours.</div>
       </div>
       <div class="step">
         <div class="step-num">02</div>
-        <div class="step-title">Algorithm Runs</div>
-        <div class="step-desc">We analyse wallet age, transaction consistency, DeFi participation, token diversity, and cross-chain activity.</div>
+        <div class="step-title">Oracle Listens</div>
+        <div class="step-desc">Kwala detects the <code style="color:var(--accent);font-size:11px;">ScoreRequested</code> event and triggers our off-chain API to analyse your history across 3 chains.</div>
       </div>
       <div class="step">
         <div class="step-num">03</div>
         <div class="step-title">Score Minted</div>
-        <div class="step-desc">Your score (300–850) is stored as a non-transferable Soulbound Token on Base Sepolia. Permanently yours.</div>
+        <div class="step-desc">Your score (300–850) is written back on-chain and minted as a non-transferable SBT directly to your wallet address.</div>
       </div>
       <div class="step">
         <div class="step-num">04</div>
         <div class="step-title">Lenders Query</div>
-        <div class="step-desc">Fintechs and DeFi protocols query your score via API to make lending decisions — without a bank account.</div>
+        <div class="step-desc">DeFi protocols and fintechs query your SBT score via API to make lending decisions — without a bank account.</div>
       </div>
     </div>
   </section>
@@ -849,39 +982,81 @@
 <footer>
   <div class="footer-inner">
     <div class="footer-logo">Sko<span>ré</span></div>
-    <div class="footer-right">
-      Built for Schulltech × Kwala Hackathon 2026
-    </div>
+    <div class="footer-right">Built for Schulltech × Kwala Hackathon 2026</div>
   </div>
 </footer>
 
 <script>
-  // ── CONFIG — replace with your Railway API URL ──
   const API_URL = "https://skore-rliw.onrender.com";
-  // Example: const API_URL = "https://skore-api-production.up.railway.app";
+  const SBT_ADDRESS = "0xCC0B4686de40Ff5ae1e0B8d58Da9175e9090610D";
+  const SBT_ABI = [
+    "function requestScore() external",
+    "function hasScore(address wallet) external view returns (bool)"
+  ];
 
-  let provider, signer;
+  let provider, signer, connectedAddress;
+  let pollInterval = null;
 
   // ── WALLET CONNECTION ──
   async function connectWallet() {
-    if (!window.ethereum) return alert("Please install MetaMask");
+    if (!window.ethereum) return alert("Please install MetaMask to use Skoré.");
     try {
       await window.ethereum.request({ method: 'eth_requestAccounts' });
       const { ethers } = await import("https://cdn.jsdelivr.net/npm/ethers@6.9.0/dist/ethers.min.js");
       provider = new ethers.BrowserProvider(window.ethereum);
       signer = await provider.getSigner();
-      const addr = await signer.getAddress();
+      connectedAddress = await signer.getAddress();
+
+      // Update nav button
       const btn = document.getElementById('connectBtn');
-      btn.textContent = addr.slice(0,6) + "..." + addr.slice(-4);
+      btn.textContent = connectedAddress.slice(0,6) + "..." + connectedAddress.slice(-4);
       btn.classList.add('connected');
-      // Auto-fill wallet input
-      document.getElementById('walletInput').value = addr;
+
+      // Fill wallet input (readonly)
+      document.getElementById('walletInput').value = connectedAddress;
+
+      // Update score button
+      document.getElementById('requestBtnText').textContent = 'Sign & Get My Score';
+      document.getElementById('requestBtn').disabled = false;
+
+      // Update note
+      document.getElementById('walletNote').style.display = 'none';
+
+      // Update flow step
+      setFlowStep(2);
+
+      // Auto-check if they already have a score
+      silentCheckExisting(connectedAddress);
+
     } catch (e) {
       alert("Connection failed: " + e.message);
     }
   }
 
-  // ── SCORE COLOR HELPERS ──
+  // silently check on connect
+  async function silentCheckExisting(wallet) {
+    try {
+      const res = await fetch(`${API_URL}/score/${wallet}`);
+      const data = await res.json();
+      if (res.ok && data.hasScore) {
+        clearStatus();
+        displayScore(data, null, true);
+        setFlowStep(4);
+      }
+    } catch(e) { /* silent */ }
+  }
+
+  // ── FLOW STEP INDICATOR ──
+  function setFlowStep(step) {
+    for (let i = 1; i <= 4; i++) {
+      const el = document.getElementById(`fStep${i}`);
+      el.classList.remove('active', 'done');
+      if (i < step) el.classList.add('done');
+      else if (i === step) el.classList.add('active');
+    }
+  }
+
+  // ── SCORE COLORS ──
   function getScoreColor(score) {
     if (score >= 750) return 'excellent';
     if (score >= 670) return 'good';
@@ -889,7 +1064,6 @@
     if (score >= 500) return 'poor';
     return 'verypoor';
   }
-
   function getGaugeColor(score) {
     if (score >= 750) return '#c8f55a';
     if (score >= 670) return '#4ade80';
@@ -899,7 +1073,7 @@
   }
 
   // ── DISPLAY SCORE ──
-  function displayScore(data, txHash) {
+  function displayScore(data, txHash, isOwned) {
     document.getElementById('emptyState').style.display = 'none';
     const display = document.getElementById('scoreDisplay');
     display.classList.add('visible');
@@ -910,24 +1084,24 @@
     const gaugeColor = getGaugeColor(score);
     const gaugeWidth = ((score - 300) / 550) * 100;
 
-    // Big score number
+    if (isOwned) {
+      document.getElementById('ownedBadge').style.display = 'flex';
+    }
+
     const scoreBig = document.getElementById('scoreBig');
     scoreBig.textContent = score;
     scoreBig.className = `score-big c-${colorClass}`;
 
-    // Badge
     const badge = document.getElementById('scoreBadge');
     badge.textContent = label;
     badge.className = `score-label-badge bg-${colorClass}`;
 
-    // Gauge
     const gauge = document.getElementById('scoreGauge');
     setTimeout(() => {
       gauge.style.width = gaugeWidth + '%';
       gauge.style.background = gaugeColor;
     }, 100);
 
-    // Breakdown
     const breakdown = document.getElementById('scoreBreakdown');
     const items = [
       { key: 'Total TXs', val: data.totalTransactions?.toLocaleString() || '—' },
@@ -943,10 +1117,9 @@
       </div>
     `).join('');
 
-    // TX hash link
     if (txHash) {
       document.getElementById('txLink').innerHTML = `
-        Minted on-chain →
+        Score minted on-chain →
         <a href="https://sepolia.basescan.org/tx/${txHash}" target="_blank">
           ${txHash.slice(0,10)}...${txHash.slice(-6)} ↗
         </a>
@@ -954,89 +1127,178 @@
     }
   }
 
-  // ── STATUS MESSAGES ──
+  // ── STATUS HELPERS ──
   function setStatus(type, msg) {
     const el = document.getElementById('statusMsg');
     el.className = `status-msg ${type}`;
-    el.textContent = msg;
+    el.innerHTML = msg;
   }
-
   function clearStatus() {
     const el = document.getElementById('statusMsg');
     el.className = 'status-msg';
     el.textContent = '';
   }
 
-  // ── REQUEST NEW SCORE ──
+  // ── POLL PROGRESS ──
+  let pollAttempt = 0;
+  const MAX_POLL = 12; // 12 × 10s = 2 minutes
+
+  function startPollProgress() {
+    pollAttempt = 0;
+    const prog = document.getElementById('pollProgress');
+    prog.classList.add('visible');
+    updatePollBar();
+  }
+
+  function updatePollBar() {
+    const pct = (pollAttempt / MAX_POLL) * 100;
+    document.getElementById('pollBar').style.width = pct + '%';
+    const remaining = Math.round(((MAX_POLL - pollAttempt) * 10));
+    document.getElementById('pollLabel').textContent =
+      `Oracle computing score — ~${remaining}s remaining`;
+  }
+
+  function stopPollProgress() {
+    document.getElementById('pollProgress').classList.remove('visible');
+  }
+
+  // ── MAIN: REQUEST SCORE VIA METAMASK ──
   async function requestScore() {
-    const wallet = document.getElementById('walletInput').value.trim();
-    if (!wallet) return setStatus('error', 'Please enter a wallet address');
-    if (!wallet.startsWith('0x') || wallet.length !== 42) {
-      return setStatus('error', 'Invalid wallet address format');
-    }
+    if (!signer) return connectWallet();
 
     const btn = document.getElementById('requestBtn');
+    const btnText = document.getElementById('requestBtnText');
+
     btn.disabled = true;
-    btn.textContent = 'Analysing wallet';
-    btn.style.position = 'relative';
-    setStatus('loading', '⏳ Reading on-chain history across 3 networks...');
+    clearStatus();
+    document.getElementById('txBadge').classList.remove('visible');
+    stopPollProgress();
 
     try {
-      const res = await fetch(`${API_URL}/score`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ wallet })
-      });
+      const { ethers } = await import("https://cdn.jsdelivr.net/npm/ethers@6.9.0/dist/ethers.min.js");
 
-      const data = await res.json();
-
-      if (!res.ok || data.error) {
-        throw new Error(data.details || data.error || 'Scoring failed');
+      // Check if already has score
+      const checkRes = await fetch(`${API_URL}/score/${connectedAddress}`);
+      const checkData = await checkRes.json();
+      if (checkRes.ok && checkData.hasScore) {
+        setStatus('success', '✓ You already have a Skoré SBT. Displaying your score.');
+        displayScore(checkData, null, true);
+        setFlowStep(4);
+        return;
       }
 
-      setStatus('success', '✓ Score minted on-chain successfully');
-      displayScore(data, data.txHash);
+      // ── STEP 1: MetaMask popup ──
+      setStatus('loading', '🦊 Confirm the transaction in MetaMask<span class="loading-dots"></span>');
+      setFlowStep(2);
+
+      const contract = new ethers.Contract(SBT_ADDRESS, SBT_ABI, signer);
+      const tx = await contract.requestScore();
+
+      btnText.textContent = 'Transaction sent…';
+      setStatus('loading', `⏳ Transaction submitted. Waiting for confirmation<span class="loading-dots"></span>`);
+      setFlowStep(3);
+
+      // ── STEP 2: Wait for on-chain confirmation ──
+      const receipt = await tx.wait();
+
+      // Show tx badge
+      const txBadge = document.getElementById('txBadge');
+      txBadge.innerHTML = `✓ TX confirmed on Base Sepolia →
+        <a href="https://sepolia.basescan.org/tx/${receipt.hash}" target="_blank">
+          ${receipt.hash.slice(0,10)}...${receipt.hash.slice(-6)} ↗
+        </a>`;
+      txBadge.classList.add('visible');
+
+      setStatus('loading', `🔍 Oracle detected your request. Computing score across 3 chains<span class="loading-dots"></span>`);
+
+      // ── STEP 3: Poll for score ──
+      startPollProgress();
+      pollAttempt = 0;
+
+      if (pollInterval) clearInterval(pollInterval);
+
+      pollInterval = setInterval(async () => {
+        pollAttempt++;
+        updatePollBar();
+
+        try {
+          const res = await fetch(`${API_URL}/score/${connectedAddress}`);
+          const data = await res.json();
+
+          if (res.ok && data.hasScore) {
+            clearInterval(pollInterval);
+            stopPollProgress();
+            setStatus('success', '🎉 Score minted to your wallet as a Soulbound Token!');
+            displayScore(data, receipt.hash, true);
+            setFlowStep(4);
+            btnText.textContent = 'Score Minted ✓';
+            return;
+          }
+        } catch(e) { /* keep polling */ }
+
+        if (pollAttempt >= MAX_POLL) {
+          clearInterval(pollInterval);
+          stopPollProgress();
+          setStatus('success', '✓ Request submitted on-chain. Your score will appear shortly — refresh in ~60s.');
+          setFlowStep(4);
+        }
+      }, 10000);
 
     } catch (e) {
-      setStatus('error', '✗ ' + e.message);
+      // User rejected or contract error
+      const msg = e?.reason || e?.shortMessage || e?.message || 'Transaction failed';
+      if (msg.includes('AlreadyHasScore') || msg.includes('already')) {
+        setStatus('error', '⚠ This wallet already has a score. Use "Check existing score" below.');
+        silentCheckExisting(connectedAddress);
+      } else if (msg.includes('user rejected') || msg.includes('denied')) {
+        setStatus('error', '✗ Transaction cancelled in MetaMask.');
+      } else {
+        setStatus('error', '✗ ' + msg);
+      }
+      setFlowStep(2);
     } finally {
       btn.disabled = false;
-      btn.textContent = 'Generate Score';
+      if (document.getElementById('requestBtnText').textContent !== 'Score Minted ✓') {
+        btnText.textContent = 'Sign & Get My Score';
+      }
     }
   }
 
-  // ── CHECK EXISTING SCORE ──
-  async function checkExistingScore() {
-    const wallet = document.getElementById('walletInput').value.trim();
-    if (!wallet) return setStatus('error', 'Please enter a wallet address');
+  // ── CHECK EXISTING (toggle form) ──
+  function checkExistingScore() {
+    const group = document.getElementById('checkAddrGroup');
+    group.style.display = group.style.display === 'none' ? 'block' : 'none';
+  }
+
+  async function doCheckExisting() {
+    const wallet = document.getElementById('checkAddrInput').value.trim();
+    if (!wallet) return setStatus('error', 'Enter a wallet address');
     if (!wallet.startsWith('0x') || wallet.length !== 42) {
       return setStatus('error', 'Invalid wallet address format');
     }
 
-    setStatus('loading', '⏳ Fetching score from chain...');
+    setStatus('loading', `⏳ Fetching score from chain<span class="loading-dots"></span>`);
 
     try {
       const res = await fetch(`${API_URL}/score/${wallet}`);
       const data = await res.json();
-
-      if (!res.ok) throw new Error(data.error || 'Failed to fetch score');
-
+      if (!res.ok) throw new Error(data.error || 'Failed');
       if (!data.hasScore) {
-        setStatus('error', 'No score found. Click "Generate Score" to create one.');
+        setStatus('error', 'No score found for this wallet. They need to request one.');
         return;
       }
-
       clearStatus();
-      displayScore(data, null);
-
-    } catch (e) {
+      displayScore(data, null, wallet.toLowerCase() === connectedAddress?.toLowerCase());
+    } catch(e) {
       setStatus('error', '✗ ' + e.message);
     }
   }
 
-  // Allow Enter key to trigger score request
-  document.getElementById('walletInput').addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') requestScore();
+  // Enter key on check input
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('checkAddrInput')?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') doCheckExisting();
+    });
   });
 </script>
 </body>
