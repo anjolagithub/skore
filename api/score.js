@@ -213,13 +213,13 @@ app.get("/", (req, res) => {
     status: "live",
     network: "Base Sepolia",
     contracts: {
-      SkoreSBT: "0xCC0B4686de40Ff5ae1e0B8d58Da9175e9090610D",
-      SkoreOracle: "0xF77cEEa40d44C4b7c5dFF7DD31dc0E281FaFeE55"
+      SkoreSBT: process.env.SKORE_SBT_ADDRESS,
+      SkoreOracle: process.env.SKORE_ORACLE_ADDRESS
     },
     endpoints: {
       health: "GET /health",
-      getScore: "GET /score/:wallet",
-      requestScore: "POST /score",
+      getScore: "GET /score/:wallet  (works for ANY wallet, no wallet connection needed)",
+      requestScore: "POST /score  (mints SBT onchain)",
       testScore: "POST /score/test"
     },
     example: "GET /score/0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
@@ -244,33 +244,67 @@ app.post("/score/test", async (req, res) => {
   }
 });
 
+/*//////////////////////////////////////////////////////////////
+  GET /score/:wallet
+  
+  NEW BEHAVIOUR:
+  1. Check if wallet has an SBT already minted onchain
+     → If yes, return the onchain data (hasScore: true, minted: true)
+  2. If no SBT, compute score on-the-fly from wallet history
+     → Return the score instantly (hasScore: true, minted: false)
+  
+  This means ANY wallet is scoreable without connecting MetaMask.
+  "minted: false" means the score is a preview — they need to
+  sign a tx to make it permanent onchain.
+//////////////////////////////////////////////////////////////*/
+
 app.get("/score/:wallet", async (req, res) => {
   const { wallet } = req.params;
   if (!ethers.isAddress(wallet)) {
     return res.status(400).json({ error: "Invalid wallet address" });
   }
+
   try {
+    // Step 1: Check if they already have an SBT minted
     const provider = new ethers.JsonRpcProvider(BASE_SEPOLIA_RPC);
     const sbtContract = new ethers.Contract(process.env.SKORE_SBT_ADDRESS, SBT_ABI, provider);
-    const hasScore = await sbtContract.hasScore(wallet);
+    const hasMintedSBT = await sbtContract.hasScore(wallet);
 
-    if (!hasScore) {
-      return res.json({ wallet, hasScore: false, message: "No score found. POST /score to generate one." });
+    if (hasMintedSBT) {
+      // Return the permanent onchain score
+      const scoreData = await sbtContract.getScore(wallet);
+      const label = await sbtContract.getScoreLabel(wallet);
+      return res.json({
+        wallet,
+        hasScore: true,
+        minted: true, // permanently onchain as SBT
+        score: Number(scoreData.score),
+        label,
+        lastUpdated: new Date(Number(scoreData.lastUpdated) * 1000).toISOString(),
+        totalTransactions: Number(scoreData.totalTransactions),
+        walletAgeMonths: Number(scoreData.walletAgeMonths),
+        hasDefiHistory: scoreData.hasDefiHistory,
+        chainCount: Number(scoreData.chainCount),
+      });
     }
 
-    const scoreData = await sbtContract.getScore(wallet);
-    const label = await sbtContract.getScoreLabel(wallet);
+    // Step 2: No SBT yet — compute score on-the-fly for any wallet
+    console.log(`No SBT found for ${wallet}, computing preview score...`);
+    const walletData = await fetchWalletData(wallet);
+    const score = computeScore(walletData);
+    const label = getLabel(score);
 
     return res.json({
       wallet,
       hasScore: true,
-      score: Number(scoreData.score),
+      minted: false, // preview only — not yet minted as SBT
+      score,
       label,
-      lastUpdated: new Date(Number(scoreData.lastUpdated) * 1000).toISOString(),
-      totalTransactions: Number(scoreData.totalTransactions),
-      walletAgeMonths: Number(scoreData.walletAgeMonths),
-      hasDefiHistory: scoreData.hasDefiHistory,
-      chainCount: Number(scoreData.chainCount),
+      totalTransactions: walletData.totalTransactions,
+      walletAgeMonths: walletData.ageMonths,
+      hasDefiHistory: walletData.hasDefiHistory,
+      chainCount: walletData.activeChains,
+      previewNote: "This is a live preview. Connect your wallet to mint this score permanently as a Soulbound Token on Base."
     });
 
   } catch (error) {
@@ -306,7 +340,7 @@ const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Skore API running on port ${PORT}`);
   console.log(`Health check: http://localhost:${PORT}/health`);
-  console.log(`Score endpoint: POST http://localhost:${PORT}/score`);
+  console.log(`Score any wallet: GET http://localhost:${PORT}/score/0x...`);
 });
 
 module.exports = app;
