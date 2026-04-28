@@ -64,7 +64,6 @@
       padding: 0 24px;
     }
 
-    /* NAV */
     nav {
       position: fixed;
       top: 0; left: 0; right: 0;
@@ -93,11 +92,7 @@
     }
     .logo span { color: var(--accent); }
 
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
 
     .nav-tag {
       font-family: 'DM Mono', monospace;
@@ -130,11 +125,7 @@
       color: var(--accent);
     }
 
-    /* HERO */
-    .hero {
-      padding-top: 140px;
-      padding-bottom: 80px;
-    }
+    .hero { padding-top: 140px; padding-bottom: 80px; }
 
     .hero-eyebrow {
       font-family: 'DM Mono', monospace;
@@ -175,16 +166,9 @@
       font-weight: 300;
     }
 
-    .hero-stats {
-      display: flex;
-      gap: 40px;
-      flex-wrap: wrap;
-    }
+    .hero-stats { display: flex; gap: 40px; flex-wrap: wrap; }
 
-    .stat {
-      border-left: 2px solid var(--border);
-      padding-left: 16px;
-    }
+    .stat { border-left: 2px solid var(--border); padding-left: 16px; }
     .stat-num {
       font-family: 'Syne', sans-serif;
       font-size: 28px;
@@ -192,18 +176,9 @@
       color: var(--text);
       line-height: 1;
     }
-    .stat-label {
-      font-size: 12px;
-      color: var(--muted2);
-      margin-top: 4px;
-      font-weight: 300;
-    }
+    .stat-label { font-size: 12px; color: var(--muted2); margin-top: 4px; font-weight: 300; }
 
-    /* SCORE SECTION */
-    .score-section {
-      padding: 80px 0;
-      border-top: 1px solid var(--border);
-    }
+    .score-section { padding: 80px 0; border-top: 1px solid var(--border); }
 
     .section-label {
       font-family: 'DM Mono', monospace;
@@ -216,12 +191,7 @@
       align-items: center;
       gap: 12px;
     }
-    .section-label::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
     .score-layout {
       display: grid;
@@ -232,15 +202,9 @@
       border-radius: 16px;
       overflow: hidden;
     }
+    @media (max-width: 768px) { .score-layout { grid-template-columns: 1fr; } }
 
-    @media (max-width: 768px) {
-      .score-layout { grid-template-columns: 1fr; }
-    }
-
-    .score-input-panel {
-      background: var(--surface);
-      padding: 48px;
-    }
+    .score-input-panel { background: var(--surface); padding: 48px; }
 
     .score-result-panel {
       background: var(--surface2);
@@ -252,30 +216,85 @@
       min-height: 480px;
     }
 
-    .panel-title {
+    .panel-title { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+    .panel-subtitle { font-size: 13px; color: var(--muted2); margin-bottom: 36px; line-height: 1.6; }
+
+    /* LOOKUP BOX — primary CTA, always visible */
+    .lookup-box {
+      background: var(--bg);
+      border: 1px solid var(--accent);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    .lookup-box-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      display: block;
+    }
+    .lookup-row {
+      display: flex;
+      gap: 8px;
+    }
+    .lookup-input {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px 14px;
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .lookup-input:focus { border-color: var(--accent); }
+    .lookup-input::placeholder { color: var(--muted); }
+    .lookup-go-btn {
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      border-radius: 6px;
+      padding: 12px 18px;
       font-family: 'Syne', sans-serif;
-      font-size: 20px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-
-    .panel-subtitle {
       font-size: 13px;
-      color: var(--muted2);
-      margin-bottom: 36px;
-      line-height: 1.6;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .lookup-go-btn:hover { opacity: 0.85; }
+    .lookup-note {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      color: var(--muted);
+      margin-top: 8px;
+      letter-spacing: 0.05em;
     }
 
-    /* FLOW STEPS indicator */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 20px 0;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--muted);
+    }
+    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
     .flow-steps {
       display: flex;
       gap: 0;
-      margin-bottom: 32px;
+      margin-bottom: 16px;
       border: 1px solid var(--border);
       border-radius: 8px;
       overflow: hidden;
     }
-
     .flow-step {
       flex: 1;
       padding: 10px 8px;
@@ -288,26 +307,13 @@
       background: var(--bg);
       border-right: 1px solid var(--border);
       transition: all 0.3s;
-      position: relative;
     }
     .flow-step:last-child { border-right: none; }
-    .flow-step.active {
-      color: var(--accent);
-      background: rgba(200,245,90,0.06);
-    }
-    .flow-step.done {
-      color: var(--good);
-      background: rgba(74,222,128,0.04);
-    }
-    .flow-step-num {
-      display: block;
-      font-size: 14px;
-      font-weight: 700;
-      margin-bottom: 2px;
-    }
+    .flow-step.active { color: var(--accent); background: rgba(200,245,90,0.06); }
+    .flow-step.done { color: var(--good); background: rgba(74,222,128,0.04); }
+    .flow-step-num { display: block; font-size: 14px; font-weight: 700; margin-bottom: 2px; }
 
-    .input-group { margin-bottom: 20px; }
-
+    .input-group { margin-bottom: 16px; }
     .input-label {
       font-family: 'DM Mono', monospace;
       font-size: 10px;
@@ -317,7 +323,6 @@
       margin-bottom: 8px;
       display: block;
     }
-
     .wallet-input {
       width: 100%;
       background: var(--bg);
@@ -332,12 +337,7 @@
     }
     .wallet-input:focus { border-color: var(--accent); }
     .wallet-input::placeholder { color: var(--muted); }
-    .wallet-input:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
 
-    /* Web3 CTA button */
     .score-btn {
       width: 100%;
       background: var(--accent);
@@ -360,48 +360,16 @@
     .score-btn:hover { opacity: 0.85; transform: translateY(-1px); }
     .score-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
 
-    .metamask-icon {
-      font-size: 18px;
-    }
-
     .wallet-required-note {
-      margin-top: 12px;
+      margin-top: 10px;
       font-family: 'DM Mono', monospace;
       font-size: 10px;
       color: var(--muted);
       text-align: center;
       letter-spacing: 0.05em;
     }
-    .wallet-required-note a {
-      color: var(--accent);
-      text-decoration: none;
-      cursor: pointer;
-    }
-    .wallet-required-note a:hover { text-decoration: underline; }
+    .wallet-required-note a { color: var(--accent); text-decoration: none; cursor: pointer; }
 
-    .or-divider {
-      text-align: center;
-      color: var(--muted);
-      font-size: 12px;
-      margin: 16px 0;
-      font-family: 'DM Mono', monospace;
-    }
-
-    .check-btn {
-      width: 100%;
-      background: transparent;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 14px;
-      color: var(--muted2);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .check-btn:hover { border-color: var(--muted2); color: var(--text); }
-
-    /* STATUS MESSAGES */
     .status-msg {
       margin-top: 16px;
       padding: 12px 16px;
@@ -411,54 +379,16 @@
       display: none;
       line-height: 1.5;
     }
-    .status-msg.loading {
-      background: rgba(200,245,90,0.05);
-      border: 1px solid rgba(200,245,90,0.2);
-      color: var(--accent);
-      display: block;
-    }
-    .status-msg.error {
-      background: rgba(239,68,68,0.05);
-      border: 1px solid rgba(239,68,68,0.2);
-      color: #ef4444;
-      display: block;
-    }
-    .status-msg.success {
-      background: rgba(200,245,90,0.05);
-      border: 1px solid rgba(200,245,90,0.2);
-      color: var(--accent);
-      display: block;
-    }
+    .status-msg.loading { background: rgba(200,245,90,0.05); border: 1px solid rgba(200,245,90,0.2); color: var(--accent); display: block; }
+    .status-msg.error { background: rgba(239,68,68,0.05); border: 1px solid rgba(239,68,68,0.2); color: #ef4444; display: block; }
+    .status-msg.success { background: rgba(200,245,90,0.05); border: 1px solid rgba(200,245,90,0.2); color: var(--accent); display: block; }
 
-    /* PROGRESS BAR for polling */
-    .poll-progress {
-      display: none;
-      margin-top: 12px;
-    }
+    .poll-progress { display: none; margin-top: 12px; }
     .poll-progress.visible { display: block; }
-    .poll-bar-bg {
-      height: 3px;
-      background: var(--border);
-      border-radius: 100px;
-      overflow: hidden;
-    }
-    .poll-bar-fill {
-      height: 100%;
-      background: var(--accent);
-      border-radius: 100px;
-      transition: width 0.5s ease;
-      width: 0%;
-    }
-    .poll-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 9px;
-      color: var(--muted);
-      margin-top: 6px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
+    .poll-bar-bg { height: 3px; background: var(--border); border-radius: 100px; overflow: hidden; }
+    .poll-bar-fill { height: 100%; background: var(--accent); border-radius: 100px; transition: width 0.5s ease; width: 0%; }
+    .poll-label { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--muted); margin-top: 6px; letter-spacing: 0.08em; text-transform: uppercase; }
 
-    /* TX CONFIRMATION BADGE */
     .tx-confirm-badge {
       display: none;
       margin-top: 12px;
@@ -473,22 +403,11 @@
     }
     .tx-confirm-badge.visible { display: block; }
     .tx-confirm-badge a { color: var(--good); }
-    .tx-confirm-badge a:hover { text-decoration: underline; }
 
-    /* SCORE DISPLAY */
-    .score-empty {
-      text-align: center;
-      color: var(--muted);
-    }
-    .score-empty-icon {
-      font-size: 48px;
-      margin-bottom: 16px;
-      opacity: 0.3;
-    }
-    .score-empty-text {
-      font-size: 14px;
-      color: var(--muted);
-    }
+    /* RESULT PANEL */
+    .score-empty { text-align: center; color: var(--muted); }
+    .score-empty-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.3; }
+    .score-empty-text { font-size: 14px; color: var(--muted); }
 
     .score-display { width: 100%; display: none; }
     .score-display.visible { display: block; }
@@ -515,62 +434,20 @@
       margin-bottom: 32px;
     }
 
-    .score-gauge {
-      width: 100%;
-      height: 6px;
-      background: var(--border);
-      border-radius: 100px;
-      margin-bottom: 32px;
-      overflow: hidden;
-    }
-    .score-gauge-fill {
-      height: 100%;
-      border-radius: 100px;
-      transition: width 1s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
+    .score-gauge { width: 100%; height: 6px; background: var(--border); border-radius: 100px; margin-bottom: 32px; overflow: hidden; }
+    .score-gauge-fill { height: 100%; border-radius: 100px; transition: width 1s cubic-bezier(0.34, 1.56, 0.64, 1); }
 
-    .score-breakdown {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      width: 100%;
-    }
-
-    .breakdown-item {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 12px;
-    }
-    .breakdown-key {
-      font-family: 'DM Mono', monospace;
-      font-size: 9px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 4px;
-    }
-    .breakdown-val {
-      font-family: 'Syne', sans-serif;
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--text);
-    }
+    .score-breakdown { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; }
+    .breakdown-item { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; }
+    .breakdown-key { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
+    .breakdown-val { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; color: var(--text); }
     .breakdown-val.positive { color: var(--accent); }
 
-    .tx-link {
-      display: block;
-      margin-top: 16px;
-      font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      color: var(--muted2);
-      text-align: center;
-    }
+    .tx-link { display: block; margin-top: 16px; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted2); text-align: center; }
     .tx-link a { color: var(--accent); text-decoration: none; }
     .tx-link a:hover { text-decoration: underline; }
 
-    /* OWNED BADGE */
-    .owned-badge {
+    .score-badge-row {
       display: flex;
       align-items: center;
       gap: 6px;
@@ -578,27 +455,20 @@
       margin-bottom: 16px;
       font-family: 'DM Mono', monospace;
       font-size: 10px;
-      color: var(--good);
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }
-    .owned-dot {
-      width: 6px;
-      height: 6px;
+    .badge-dot {
+      width: 6px; height: 6px;
       border-radius: 50%;
-      background: var(--good);
-      animation: blink 2s ease infinite;
+      display: inline-block;
     }
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
-    }
+    .badge-dot.green { background: var(--good); animation: blink 2s ease infinite; }
+    .badge-dot.yellow { background: #fbbf24; }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
     /* HOW IT WORKS */
-    .how-section {
-      padding: 80px 0;
-      border-top: 1px solid var(--border);
-    }
+    .how-section { padding: 80px 0; border-top: 1px solid var(--border); }
 
     .steps {
       display: grid;
@@ -610,47 +480,18 @@
       overflow: hidden;
       margin-top: 40px;
     }
-    @media (max-width: 768px) {
-      .steps { grid-template-columns: 1fr 1fr; }
-    }
+    @media (max-width: 768px) { .steps { grid-template-columns: 1fr 1fr; } }
 
-    .step {
-      background: var(--surface);
-      padding: 32px 28px;
-      transition: background 0.2s;
-    }
+    .step { background: var(--surface); padding: 32px 28px; transition: background 0.2s; }
     .step:hover { background: var(--surface2); }
-    .step-num {
-      font-family: 'Syne', sans-serif;
-      font-size: 48px;
-      font-weight: 800;
-      color: var(--border);
-      line-height: 1;
-      margin-bottom: 16px;
-    }
-    .step-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 15px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-    .step-desc {
-      font-size: 13px;
-      color: var(--muted2);
-      line-height: 1.6;
-    }
-
-    /* highlight the user-signs step */
-    .step.highlight {
-      background: rgba(200,245,90,0.03);
-    }
+    .step-num { font-family: 'Syne', sans-serif; font-size: 48px; font-weight: 800; color: var(--border); line-height: 1; margin-bottom: 16px; }
+    .step-title { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+    .step-desc { font-size: 13px; color: var(--muted2); line-height: 1.6; }
+    .step.highlight { background: rgba(200,245,90,0.03); }
     .step.highlight .step-num { color: rgba(200,245,90,0.15); }
 
     /* CONTRACTS */
-    .contracts-section {
-      padding: 80px 0;
-      border-top: 1px solid var(--border);
-    }
+    .contracts-section { padding: 80px 0; border-top: 1px solid var(--border); }
 
     .contracts-grid {
       display: grid;
@@ -662,14 +503,9 @@
       overflow: hidden;
       margin-top: 40px;
     }
-    @media (max-width: 600px) {
-      .contracts-grid { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 600px) { .contracts-grid { grid-template-columns: 1fr; } }
 
-    .contract-card {
-      background: var(--surface);
-      padding: 32px;
-    }
+    .contract-card { background: var(--surface); padding: 32px; }
     .contract-tag {
       font-family: 'DM Mono', monospace;
       font-size: 9px;
@@ -683,18 +519,8 @@
       display: inline-block;
       margin-bottom: 16px;
     }
-    .contract-name {
-      font-family: 'Syne', sans-serif;
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-    .contract-desc {
-      font-size: 13px;
-      color: var(--muted2);
-      margin-bottom: 20px;
-      line-height: 1.6;
-    }
+    .contract-name { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .contract-desc { font-size: 13px; color: var(--muted2); margin-bottom: 20px; line-height: 1.6; }
     .contract-addr {
       font-family: 'DM Mono', monospace;
       font-size: 11px;
@@ -709,12 +535,7 @@
     .contract-addr a { color: var(--accent); text-decoration: none; }
     .contract-addr a:hover { text-decoration: underline; }
 
-    /* FOOTER */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 40px 0;
-      margin-top: 40px;
-    }
+    footer { border-top: 1px solid var(--border); padding: 40px 0; margin-top: 40px; }
     .footer-inner {
       max-width: 1100px;
       margin: 0 auto;
@@ -729,26 +550,15 @@
     .footer-logo span { color: var(--accent); }
     .footer-right { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); }
 
-    /* ANIMATIONS */
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
-    .loading-dots::after {
-      content: '...';
-      animation: pulse 1.2s ease-in-out infinite;
-    }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+    .loading-dots::after { content: '...'; animation: pulse 1.2s ease-in-out infinite; }
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
     .hero-eyebrow { animation: fadeUp 0.6s ease both; }
     .hero h1 { animation: fadeUp 0.6s 0.1s ease both; }
     .hero-sub { animation: fadeUp 0.6s 0.2s ease both; }
     .hero-stats { animation: fadeUp 0.6s 0.3s ease both; }
 
-    /* SCORE COLORS */
     .c-excellent { color: var(--excellent); }
     .c-good { color: var(--good); }
     .c-fair { color: var(--fair); }
@@ -764,20 +574,16 @@
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
   <div class="nav-inner">
     <div class="logo">Sko<span>ré</span></div>
     <div class="nav-right">
       <span class="nav-tag">Base Sepolia</span>
-      <button class="connect-btn" id="connectBtn" onclick="connectWallet()">
-        Connect Wallet
-      </button>
+      <button class="connect-btn" id="connectBtn" onclick="connectWallet()">Connect Wallet</button>
     </div>
   </div>
 </nav>
 
-<!-- HERO -->
 <div class="container">
   <section class="hero">
     <div class="hero-eyebrow">Decentralised Credit Protocol</div>
@@ -807,7 +613,6 @@
     </div>
   </section>
 
-  <!-- SCORE SECTION -->
   <section class="score-section">
     <div class="section-label">Get Your Score</div>
 
@@ -815,141 +620,112 @@
 
       <!-- INPUT PANEL -->
       <div class="score-input-panel">
-        <div class="panel-title">Request Credit Score</div>
+        <div class="panel-title">Credit Score Lookup</div>
         <p class="panel-subtitle">
-          Connect your wallet and sign a transaction. Your score is minted
-          directly to your address as a Soulbound Token — you own the transaction.
+          Enter any wallet address to instantly see their credit score — no wallet connection needed.
+          Connect MetaMask only to mint your score permanently as a Soulbound Token on Base.
         </p>
 
-        <!-- Flow step indicator -->
+        <!-- PRIMARY: Lookup any wallet — no MetaMask needed -->
+        <div class="lookup-box">
+          <span class="lookup-box-label">🔍 Score any wallet instantly</span>
+          <div class="lookup-row">
+            <input
+              type="text"
+              class="lookup-input"
+              id="lookupInput"
+              placeholder="0x... paste any wallet address"
+            />
+            <button class="lookup-go-btn" onclick="doLookup()">Score it →</button>
+          </div>
+          <div class="lookup-note">No wallet connection required · Scores computed across Ethereum, Polygon & Base</div>
+        </div>
+
+        <div class="divider">or mint yours permanently</div>
+
+        <!-- SECONDARY: MetaMask mint flow -->
         <div class="flow-steps" id="flowSteps">
-          <div class="flow-step active" id="fStep1">
-            <span class="flow-step-num">①</span>Connect
-          </div>
-          <div class="flow-step" id="fStep2">
-            <span class="flow-step-num">②</span>Sign
-          </div>
-          <div class="flow-step" id="fStep3">
-            <span class="flow-step-num">③</span>Compute
-          </div>
-          <div class="flow-step" id="fStep4">
-            <span class="flow-step-num">④</span>Minted
-          </div>
+          <div class="flow-step active" id="fStep1"><span class="flow-step-num">①</span>Connect</div>
+          <div class="flow-step" id="fStep2"><span class="flow-step-num">②</span>Sign</div>
+          <div class="flow-step" id="fStep3"><span class="flow-step-num">③</span>Compute</div>
+          <div class="flow-step" id="fStep4"><span class="flow-step-num">④</span>Minted</div>
         </div>
 
         <div class="input-group">
-          <label class="input-label">Wallet Address</label>
-          <input
-            type="text"
-            class="wallet-input"
-            id="walletInput"
-            placeholder="Connect wallet to auto-fill"
-            readonly
-          />
+          <label class="input-label">Your Connected Wallet</label>
+          <input type="text" class="wallet-input" id="walletInput" placeholder="Connect wallet to auto-fill" readonly />
         </div>
 
-        <button class="score-btn" id="requestBtn" onclick="requestScore()">
-          <span class="metamask-icon">🦊</span>
+        <button class="score-btn" id="requestBtn" onclick="requestScore()" disabled>
+          <span>🦊</span>
           <span id="requestBtnText">Connect Wallet First</span>
         </button>
 
         <div class="wallet-required-note" id="walletNote">
-          Wallet required to sign the <code>requestScore()</code> transaction.
+          Connect MetaMask to mint your score as a permanent Soulbound Token on Base.
           <a onclick="connectWallet()">Connect now →</a>
         </div>
 
-        <!-- TX Confirmation badge -->
         <div class="tx-confirm-badge" id="txBadge"></div>
 
-        <!-- Poll progress -->
         <div class="poll-progress" id="pollProgress">
-          <div class="poll-bar-bg">
-            <div class="poll-bar-fill" id="pollBar"></div>
-          </div>
+          <div class="poll-bar-bg"><div class="poll-bar-fill" id="pollBar"></div></div>
           <div class="poll-label" id="pollLabel">Waiting for oracle...</div>
         </div>
 
         <div class="status-msg" id="statusMsg"></div>
-
-        <div class="or-divider">— or —</div>
-
-        <button class="check-btn" onclick="checkExistingScore()">
-          Check existing score for any address
-        </button>
-
-        <div class="input-group" style="margin-top:12px; display:none;" id="checkAddrGroup">
-          <label class="input-label">Any Wallet Address</label>
-          <input
-            type="text"
-            class="wallet-input"
-            id="checkAddrInput"
-            placeholder="0x..."
-          />
-          <button class="check-btn" style="margin-top:8px;" onclick="doCheckExisting()">
-            Fetch Score →
-          </button>
-        </div>
       </div>
 
       <!-- RESULT PANEL -->
       <div class="score-result-panel" id="resultPanel">
-
         <div class="score-empty" id="emptyState">
           <div class="score-empty-icon">◎</div>
-          <div class="score-empty-text">Connect wallet to get your score</div>
+          <div class="score-empty-text">Enter any wallet address to see their score</div>
         </div>
 
         <div class="score-display" id="scoreDisplay">
-          <div id="ownedBadge" class="owned-badge" style="display:none;">
-            <span class="owned-dot"></span>
-            Soulbound to your wallet
-          </div>
+          <div class="score-badge-row" id="scoreBadgeRow" style="display:none;"></div>
           <div style="text-align:center; margin-bottom: 8px;">
             <div class="score-big" id="scoreBig">—</div>
             <span class="score-label-badge" id="scoreBadge">—</span>
           </div>
-
           <div class="score-gauge">
             <div class="score-gauge-fill" id="scoreGauge" style="width:0%"></div>
           </div>
-
           <div class="score-breakdown" id="scoreBreakdown"></div>
-
           <div class="tx-link" id="txLink"></div>
         </div>
-
       </div>
+
     </div>
   </section>
 
-  <!-- HOW IT WORKS -->
   <section class="how-section">
     <div class="section-label">How It Works</div>
     <div class="steps">
       <div class="step highlight">
         <div class="step-num">01</div>
-        <div class="step-title">You Sign</div>
-        <div class="step-desc">Connect MetaMask and call <code style="color:var(--accent);font-size:11px;">requestScore()</code> on-chain. Your wallet initiates the transaction — not ours.</div>
+        <div class="step-title">Any Wallet</div>
+        <div class="step-desc">Paste any wallet address. Skoré instantly analyses on-chain history across 3 chains — no login, no MetaMask required.</div>
       </div>
       <div class="step">
         <div class="step-num">02</div>
-        <div class="step-title">Oracle Listens</div>
-        <div class="step-desc">Kwala detects the <code style="color:var(--accent);font-size:11px;">ScoreRequested</code> event and triggers our off-chain API to analyse your history across 3 chains.</div>
+        <div class="step-title">Oracle Scores</div>
+        <div class="step-desc">Kwala detects the <code style="color:var(--accent);font-size:11px;">ScoreRequested</code> event and triggers our API to analyse wallet history across Ethereum, Polygon & Base.</div>
       </div>
       <div class="step">
         <div class="step-num">03</div>
-        <div class="step-title">Score Minted</div>
-        <div class="step-desc">Your score (300–850) is written back on-chain and minted as a non-transferable SBT directly to your wallet address.</div>
+        <div class="step-title">SBT Minted</div>
+        <div class="step-desc">Your score (300–850) is written back on-chain and minted as a non-transferable Soulbound Token directly to your wallet.</div>
       </div>
       <div class="step">
         <div class="step-num">04</div>
         <div class="step-title">Lenders Query</div>
-        <div class="step-desc">DeFi protocols and fintechs query your SBT score via API to make lending decisions — without a bank account.</div>
+        <div class="step-desc">DeFi protocols and fintechs query your SBT score via API to make lending decisions — without a bank account or credit bureau.</div>
       </div>
     </div>
   </section>
 
-  <!-- CONTRACTS -->
   <section class="contracts-section">
     <div class="section-label">Live Contracts — Base Sepolia</div>
     <div class="contracts-grid">
@@ -975,10 +751,8 @@
       </div>
     </div>
   </section>
-
 </div>
 
-<!-- FOOTER -->
 <footer>
   <div class="footer-inner">
     <div class="footer-logo">Sko<span>ré</span></div>
@@ -997,64 +771,12 @@
   let provider, signer, connectedAddress;
   let pollInterval = null;
 
-  // ── WALLET CONNECTION ──
-  async function connectWallet() {
-    if (!window.ethereum) return alert("Please install MetaMask to use Skoré.");
-    try {
-      await window.ethereum.request({ method: 'eth_requestAccounts' });
-      const { ethers } = await import("https://cdn.jsdelivr.net/npm/ethers@6.9.0/dist/ethers.min.js");
-      provider = new ethers.BrowserProvider(window.ethereum);
-      signer = await provider.getSigner();
-      connectedAddress = await signer.getAddress();
-
-      // Update nav button
-      const btn = document.getElementById('connectBtn');
-      btn.textContent = connectedAddress.slice(0,6) + "..." + connectedAddress.slice(-4);
-      btn.classList.add('connected');
-
-      // Fill wallet input (readonly)
-      document.getElementById('walletInput').value = connectedAddress;
-
-      // Update score button
-      document.getElementById('requestBtnText').textContent = 'Sign & Get My Score';
-      document.getElementById('requestBtn').disabled = false;
-
-      // Update note
-      document.getElementById('walletNote').style.display = 'none';
-
-      // Update flow step
-      setFlowStep(2);
-
-      // Auto-check if they already have a score
-      silentCheckExisting(connectedAddress);
-
-    } catch (e) {
-      alert("Connection failed: " + e.message);
-    }
-  }
-
-  // silently check on connect
-  async function silentCheckExisting(wallet) {
-    try {
-      const res = await fetch(`${API_URL}/score/${wallet}`);
-      const data = await res.json();
-      if (res.ok && data.hasScore) {
-        clearStatus();
-        displayScore(data, null, true);
-        setFlowStep(4);
-      }
-    } catch(e) { /* silent */ }
-  }
-
-  // ── FLOW STEP INDICATOR ──
-  function setFlowStep(step) {
-    for (let i = 1; i <= 4; i++) {
-      const el = document.getElementById(`fStep${i}`);
-      el.classList.remove('active', 'done');
-      if (i < step) el.classList.add('done');
-      else if (i === step) el.classList.add('active');
-    }
-  }
+  // ── ON LOAD ──
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('lookupInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') doLookup();
+    });
+  });
 
   // ── SCORE COLORS ──
   function getScoreColor(score) {
@@ -1073,19 +795,24 @@
   }
 
   // ── DISPLAY SCORE ──
-  function displayScore(data, txHash, isOwned) {
+  function displayScore(data, txHash, isOwnWallet) {
     document.getElementById('emptyState').style.display = 'none';
     const display = document.getElementById('scoreDisplay');
     display.classList.add('visible');
 
     const score = data.score;
-    const label = data.label;
     const colorClass = getScoreColor(score);
-    const gaugeColor = getGaugeColor(score);
     const gaugeWidth = ((score - 300) / 550) * 100;
 
-    if (isOwned) {
-      document.getElementById('ownedBadge').style.display = 'flex';
+    // Badge row
+    const badgeRow = document.getElementById('scoreBadgeRow');
+    badgeRow.style.display = 'flex';
+    if (data.minted) {
+      badgeRow.style.color = 'var(--good)';
+      badgeRow.innerHTML = `<span class="badge-dot green"></span> Soulbound on Base`;
+    } else {
+      badgeRow.style.color = '#fbbf24';
+      badgeRow.innerHTML = `<span class="badge-dot yellow"></span> Live Preview — not yet minted as SBT`;
     }
 
     const scoreBig = document.getElementById('scoreBig');
@@ -1093,41 +820,97 @@
     scoreBig.className = `score-big c-${colorClass}`;
 
     const badge = document.getElementById('scoreBadge');
-    badge.textContent = label;
+    badge.textContent = data.label;
     badge.className = `score-label-badge bg-${colorClass}`;
 
     const gauge = document.getElementById('scoreGauge');
     setTimeout(() => {
       gauge.style.width = gaugeWidth + '%';
-      gauge.style.background = gaugeColor;
+      gauge.style.background = getGaugeColor(score);
     }, 100);
 
-    const breakdown = document.getElementById('scoreBreakdown');
-    const items = [
+    document.getElementById('scoreBreakdown').innerHTML = [
       { key: 'Total TXs', val: data.totalTransactions?.toLocaleString() || '—' },
       { key: 'Wallet Age', val: data.walletAgeMonths ? data.walletAgeMonths + ' months' : '—' },
       { key: 'DeFi History', val: data.hasDefiHistory ? '✓ Yes' : '✗ No', positive: data.hasDefiHistory },
       { key: 'Chain Count', val: data.chainCount ? data.chainCount + ' chains' : '—' },
-    ];
-
-    breakdown.innerHTML = items.map(item => `
+    ].map(item => `
       <div class="breakdown-item">
         <div class="breakdown-key">${item.key}</div>
         <div class="breakdown-val ${item.positive ? 'positive' : ''}">${item.val}</div>
       </div>
     `).join('');
 
-    if (txHash) {
-      document.getElementById('txLink').innerHTML = `
-        Score minted on-chain →
-        <a href="https://sepolia.basescan.org/tx/${txHash}" target="_blank">
-          ${txHash.slice(0,10)}...${txHash.slice(-6)} ↗
-        </a>
-      `;
+    const txLink = document.getElementById('txLink');
+    if (data.minted && txHash) {
+      txLink.innerHTML = `Score minted on Base → <a href="https://sepolia.basescan.org/tx/${txHash}" target="_blank">${txHash.slice(0,10)}...${txHash.slice(-6)} ↗</a>`;
+    } else if (!data.minted) {
+      txLink.innerHTML = `This is a live preview. <a onclick="connectWallet()" style="cursor:pointer">Connect wallet to mint it permanently on Base →</a>`;
+    } else {
+      txLink.innerHTML = '';
     }
   }
 
-  // ── STATUS HELPERS ──
+  // ── LOOKUP ANY WALLET (no MetaMask needed) ──
+  async function doLookup() {
+    const wallet = document.getElementById('lookupInput').value.trim();
+    if (!wallet) return setStatus('error', 'Enter a wallet address');
+    if (!wallet.startsWith('0x') || wallet.length !== 42) {
+      return setStatus('error', 'Invalid wallet address — must start with 0x and be 42 characters');
+    }
+
+    setStatus('loading', `⏳ Scoring wallet across Ethereum, Polygon & Base<span class="loading-dots"></span>`);
+
+    try {
+      const res = await fetch(`${API_URL}/score/${wallet}`);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'API error');
+      clearStatus();
+      const isOwn = wallet.toLowerCase() === connectedAddress?.toLowerCase();
+      displayScore(data, null, isOwn);
+    } catch(e) {
+      setStatus('error', '✗ ' + e.message);
+    }
+  }
+
+  // ── WALLET CONNECTION ──
+  async function connectWallet() {
+    if (!window.ethereum) return alert("Please install MetaMask to use Skoré.");
+    try {
+      await window.ethereum.request({ method: 'eth_requestAccounts' });
+      const { ethers } = await import("https://cdn.jsdelivr.net/npm/ethers@6.9.0/dist/ethers.min.js");
+      provider = new ethers.BrowserProvider(window.ethereum);
+      signer = await provider.getSigner();
+      connectedAddress = await signer.getAddress();
+
+      document.getElementById('connectBtn').textContent = connectedAddress.slice(0,6) + "..." + connectedAddress.slice(-4);
+      document.getElementById('connectBtn').classList.add('connected');
+      document.getElementById('walletInput').value = connectedAddress;
+      document.getElementById('requestBtnText').textContent = 'Sign & Mint My Score on Base';
+      document.getElementById('requestBtn').disabled = false;
+      document.getElementById('walletNote').style.display = 'none';
+      setFlowStep(2);
+
+      // Auto-lookup their wallet
+      document.getElementById('lookupInput').value = connectedAddress;
+      doLookup();
+
+    } catch (e) {
+      alert("Connection failed: " + e.message);
+    }
+  }
+
+  // ── FLOW STEPS ──
+  function setFlowStep(step) {
+    for (let i = 1; i <= 4; i++) {
+      const el = document.getElementById(`fStep${i}`);
+      el.classList.remove('active', 'done');
+      if (i < step) el.classList.add('done');
+      else if (i === step) el.classList.add('active');
+    }
+  }
+
+  // ── STATUS ──
   function setStatus(type, msg) {
     const el = document.getElementById('statusMsg');
     el.className = `status-msg ${type}`;
@@ -1141,34 +924,27 @@
 
   // ── POLL PROGRESS ──
   let pollAttempt = 0;
-  const MAX_POLL = 12; // 12 × 10s = 2 minutes
+  const MAX_POLL = 12;
 
   function startPollProgress() {
     pollAttempt = 0;
-    const prog = document.getElementById('pollProgress');
-    prog.classList.add('visible');
+    document.getElementById('pollProgress').classList.add('visible');
     updatePollBar();
   }
-
   function updatePollBar() {
-    const pct = (pollAttempt / MAX_POLL) * 100;
-    document.getElementById('pollBar').style.width = pct + '%';
-    const remaining = Math.round(((MAX_POLL - pollAttempt) * 10));
-    document.getElementById('pollLabel').textContent =
-      `Oracle computing score — ~${remaining}s remaining`;
+    document.getElementById('pollBar').style.width = (pollAttempt / MAX_POLL * 100) + '%';
+    document.getElementById('pollLabel').textContent = `Oracle computing score — ~${(MAX_POLL - pollAttempt) * 10}s remaining`;
   }
-
   function stopPollProgress() {
     document.getElementById('pollProgress').classList.remove('visible');
   }
 
-  // ── MAIN: REQUEST SCORE VIA METAMASK ──
+  // ── MINT VIA METAMASK ──
   async function requestScore() {
     if (!signer) return connectWallet();
 
     const btn = document.getElementById('requestBtn');
     const btnText = document.getElementById('requestBtnText');
-
     btn.disabled = true;
     clearStatus();
     document.getElementById('txBadge').classList.remove('visible');
@@ -1177,17 +953,16 @@
     try {
       const { ethers } = await import("https://cdn.jsdelivr.net/npm/ethers@6.9.0/dist/ethers.min.js");
 
-      // Check if already has score
+      // Check if already minted
       const checkRes = await fetch(`${API_URL}/score/${connectedAddress}`);
       const checkData = await checkRes.json();
-      if (checkRes.ok && checkData.hasScore) {
-        setStatus('success', '✓ You already have a Skoré SBT. Displaying your score.');
+      if (checkRes.ok && checkData.minted) {
+        setStatus('success', '✓ You already have a Skoré SBT minted on Base.');
         displayScore(checkData, null, true);
         setFlowStep(4);
         return;
       }
 
-      // ── STEP 1: MetaMask popup ──
       setStatus('loading', '🦊 Confirm the transaction in MetaMask<span class="loading-dots"></span>');
       setFlowStep(2);
 
@@ -1195,23 +970,16 @@
       const tx = await contract.requestScore();
 
       btnText.textContent = 'Transaction sent…';
-      setStatus('loading', `⏳ Transaction submitted. Waiting for confirmation<span class="loading-dots"></span>`);
+      setStatus('loading', `⏳ Waiting for confirmation on Base<span class="loading-dots"></span>`);
       setFlowStep(3);
 
-      // ── STEP 2: Wait for on-chain confirmation ──
       const receipt = await tx.wait();
 
-      // Show tx badge
       const txBadge = document.getElementById('txBadge');
-      txBadge.innerHTML = `✓ TX confirmed on Base Sepolia →
-        <a href="https://sepolia.basescan.org/tx/${receipt.hash}" target="_blank">
-          ${receipt.hash.slice(0,10)}...${receipt.hash.slice(-6)} ↗
-        </a>`;
+      txBadge.innerHTML = `✓ TX confirmed on Base Sepolia → <a href="https://sepolia.basescan.org/tx/${receipt.hash}" target="_blank">${receipt.hash.slice(0,10)}...${receipt.hash.slice(-6)} ↗</a>`;
       txBadge.classList.add('visible');
 
-      setStatus('loading', `🔍 Oracle detected your request. Computing score across 3 chains<span class="loading-dots"></span>`);
-
-      // ── STEP 3: Poll for score ──
+      setStatus('loading', `🔍 Oracle computing your score across 3 chains<span class="loading-dots"></span>`);
       startPollProgress();
       pollAttempt = 0;
 
@@ -1225,10 +993,10 @@
           const res = await fetch(`${API_URL}/score/${connectedAddress}`);
           const data = await res.json();
 
-          if (res.ok && data.hasScore) {
+          if (res.ok && data.minted) {
             clearInterval(pollInterval);
             stopPollProgress();
-            setStatus('success', '🎉 Score minted to your wallet as a Soulbound Token!');
+            setStatus('success', '🎉 Score minted to your wallet as a Soulbound Token on Base!');
             displayScore(data, receipt.hash, true);
             setFlowStep(4);
             btnText.textContent = 'Score Minted ✓';
@@ -1239,67 +1007,29 @@
         if (pollAttempt >= MAX_POLL) {
           clearInterval(pollInterval);
           stopPollProgress();
-          setStatus('success', '✓ Request submitted on-chain. Your score will appear shortly — refresh in ~60s.');
+          setStatus('success', '✓ Request submitted. Refresh in ~60s to see your score.');
           setFlowStep(4);
         }
       }, 10000);
 
     } catch (e) {
-      // User rejected or contract error
       const msg = e?.reason || e?.shortMessage || e?.message || 'Transaction failed';
       if (msg.includes('AlreadyHasScore') || msg.includes('already')) {
-        setStatus('error', '⚠ This wallet already has a score. Use "Check existing score" below.');
-        silentCheckExisting(connectedAddress);
+        setStatus('error', '⚠ This wallet already has a score minted.');
+        doLookup();
       } else if (msg.includes('user rejected') || msg.includes('denied')) {
-        setStatus('error', '✗ Transaction cancelled in MetaMask.');
+        setStatus('error', '✗ Transaction cancelled.');
       } else {
         setStatus('error', '✗ ' + msg);
       }
       setFlowStep(2);
     } finally {
       btn.disabled = false;
-      if (document.getElementById('requestBtnText').textContent !== 'Score Minted ✓') {
-        btnText.textContent = 'Sign & Get My Score';
+      if (btnText.textContent !== 'Score Minted ✓') {
+        btnText.textContent = 'Sign & Mint My Score on Base';
       }
     }
   }
-
-  // ── CHECK EXISTING (toggle form) ──
-  function checkExistingScore() {
-    const group = document.getElementById('checkAddrGroup');
-    group.style.display = group.style.display === 'none' ? 'block' : 'none';
-  }
-
-  async function doCheckExisting() {
-    const wallet = document.getElementById('checkAddrInput').value.trim();
-    if (!wallet) return setStatus('error', 'Enter a wallet address');
-    if (!wallet.startsWith('0x') || wallet.length !== 42) {
-      return setStatus('error', 'Invalid wallet address format');
-    }
-
-    setStatus('loading', `⏳ Fetching score from chain<span class="loading-dots"></span>`);
-
-    try {
-      const res = await fetch(`${API_URL}/score/${wallet}`);
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed');
-      if (!data.hasScore) {
-        setStatus('error', 'No score found for this wallet. They need to request one.');
-        return;
-      }
-      clearStatus();
-      displayScore(data, null, wallet.toLowerCase() === connectedAddress?.toLowerCase());
-    } catch(e) {
-      setStatus('error', '✗ ' + e.message);
-    }
-  }
-
-  // Enter key on check input
-  document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('checkAddrInput')?.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') doCheckExisting();
-    });
-  });
 </script>
 </body>
 </html>
