@@ -7,10 +7,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-/*//////////////////////////////////////////////////////////////
-                         CONFIGURATION
-//////////////////////////////////////////////////////////////*/
-
 const ALCHEMY_BASE_URL = `https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`;
 const ALCHEMY_POLYGON_URL = `https://polygon-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`;
 const ALCHEMY_BASE_CHAIN_URL = `https://base-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`;
@@ -107,7 +103,9 @@ async function fetchWalletData(walletAddress) {
         const data = chainResult.value;
         totalTransactions += data.txCount;
         if (data.txCount > 0) activeChains++;
-        if (data.firstTxTimestamp < firstTxTimestamp) firstTxTimestamp = data.firstTxTimestamp;
+        if (data.firstTxTimestamp < firstTxTimestamp) {
+          firstTxTimestamp = data.firstTxTimestamp;
+        }
         if (data.hasDefiInteraction) hasDefiHistory = true;
         data.tokens.forEach(t => uniqueTokensSet.add(t));
         totalVolumeUSD += data.volumeUSD;
@@ -117,15 +115,22 @@ async function fetchWalletData(walletAddress) {
 
     const ageMs = Date.now() - firstTxTimestamp;
     const ageMonths = Math.floor(ageMs / (1000 * 60 * 60 * 24 * 30));
-    const monthlyTxAverage = ageMonths > 0 ? totalTransactions / ageMonths : totalTransactions;
+    const monthlyTxAverage = ageMonths > 0
+      ? totalTransactions / ageMonths
+      : totalTransactions;
 
-    return { ageMonths, totalTransactions, monthlyTxAverage, hasDefiHistory,
-      liquidationCount, uniqueTokens: uniqueTokensSet.size, activeChains, totalVolumeUSD };
+    return {
+      ageMonths, totalTransactions, monthlyTxAverage, hasDefiHistory,
+      liquidationCount, uniqueTokens: uniqueTokensSet.size, activeChains, totalVolumeUSD
+    };
 
   } catch (error) {
     console.error("Error fetching wallet data:", error);
-    return { ageMonths: 0, totalTransactions: 0, monthlyTxAverage: 0,
-      hasDefiHistory: false, liquidationCount: 0, uniqueTokens: 0, activeChains: 0, totalVolumeUSD: 0 };
+    return {
+      ageMonths: 0, totalTransactions: 0, monthlyTxAverage: 0,
+      hasDefiHistory: false, liquidationCount: 0, uniqueTokens: 0,
+      activeChains: 0, totalVolumeUSD: 0
+    };
   }
 }
 
@@ -134,28 +139,41 @@ async function fetchChainData(walletAddress, alchemyUrl, chainName) {
     const provider = new ethers.JsonRpcProvider(alchemyUrl);
     const txCount = await provider.getTransactionCount(walletAddress);
 
-    // Get OLDEST transactions first for accurate age
+    // Get token balances
+    const balanceResponse = await fetch(alchemyUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        jsonrpc: "2.0", id: 1,
+        method: "alchemy_getTokenBalances",
+        params: [walletAddress]
+      }),
+    });
+    const balanceData = await balanceResponse.json();
+    const tokens = balanceData.result?.tokenBalances
+      ?.filter(t => t.tokenBalance !== "0x0000000000000000000000000000000000000000000000000000000000000000")
+      ?.map(t => t.contractAddress) || [];
+
+    // Get OLDEST transfers first — fixes wallet age bug
     const transferResponse = await fetch(alchemyUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        jsonrpc: "2.0",
-        id: 2,
+        jsonrpc: "2.0", id: 2,
         method: "alchemy_getAssetTransfers",
         params: [{
           fromAddress: walletAddress,
           category: ["external", "erc20", "internal"],
-          maxCount: "0x64", // only need 100 — we just want the oldest
-          order: "asc",    // ASCENDING = oldest first
-          withMetadata: true, // includes block timestamp directly
+          maxCount: "0x64",      // 100 is enough — we just want the oldest
+          order: "asc",          // ASCENDING = oldest first — KEY FIX
+          withMetadata: true,    // includes blockTimestamp directly
         }],
       }),
     });
-
     const transferData = await transferResponse.json();
     const transfers = transferData.result?.transfers || [];
 
-    // Use metadata timestamp directly — no need to fetch block
+    // Use metadata timestamp directly — accurate wallet age
     let firstTxTimestamp = Date.now();
     if (transfers.length > 0 && transfers[0].metadata?.blockTimestamp) {
       firstTxTimestamp = new Date(transfers[0].metadata.blockTimestamp).getTime();
@@ -164,7 +182,33 @@ async function fetchChainData(walletAddress, alchemyUrl, chainName) {
       if (block) firstTxTimestamp = block.timestamp * 1000;
     }
 
-  
+    // Check DeFi interactions
+    const hasDefiInteraction = transfers.some(tx =>
+      DEFI_PROTOCOLS.some(p => tx.to?.toLowerCase() === p.toLowerCase())
+    );
+
+    // Estimate volume from ETH transfers
+    const volumeUSD = transfers.reduce((acc, tx) => {
+      if (tx.asset === "ETH" && tx.value) return acc + (tx.value * 2000);
+      return acc;
+    }, 0);
+
+    console.log(`${chainName}: ${txCount} txs, ${tokens.length} tokens, defi: ${hasDefiInteraction}, first tx: ${new Date(firstTxTimestamp).toISOString().slice(0,10)}`);
+
+    return {
+      txCount, firstTxTimestamp, hasDefiInteraction,
+      tokens, volumeUSD, liquidations: 0
+    };
+
+  } catch (error) {
+    console.error(`Error fetching ${chainName} data:`, error.message);
+    return {
+      txCount: 0, firstTxTimestamp: Date.now(),
+      hasDefiInteraction: false, tokens: [], volumeUSD: 0, liquidations: 0
+    };
+  }
+}
+
 /*//////////////////////////////////////////////////////////////
                     BLOCKCHAIN INTERACTION
 //////////////////////////////////////////////////////////////*/
@@ -172,9 +216,13 @@ async function fetchChainData(walletAddress, alchemyUrl, chainName) {
 async function submitScoreToChain(walletAddress, score, walletData) {
   const provider = new ethers.JsonRpcProvider(BASE_SEPOLIA_RPC);
   const oracleWallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
-  const oracleContract = new ethers.Contract(process.env.SKORE_ORACLE_ADDRESS, ORACLE_ABI, oracleWallet);
+  const oracleContract = new ethers.Contract(
+    process.env.SKORE_ORACLE_ADDRESS, ORACLE_ABI, oracleWallet
+  );
 
-  const requestId = ethers.keccak256(ethers.toUtf8Bytes(`${walletAddress}-${Date.now()}`));
+  const requestId = ethers.keccak256(
+    ethers.toUtf8Bytes(`${walletAddress}-${Date.now()}`)
+  );
 
   const tx = await oracleContract.submitScore(
     walletAddress, score, walletData.totalTransactions, walletData.ageMonths,
@@ -204,8 +252,8 @@ app.get("/", (req, res) => {
     },
     endpoints: {
       health: "GET /health",
-      getScore: "GET /score/:wallet  (works for ANY wallet, no wallet connection needed)",
-      requestScore: "POST /score  (mints SBT onchain)",
+      getScore: "GET /score/:wallet",
+      requestScore: "POST /score",
       testScore: "POST /score/test"
     },
     example: "GET /score/0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
@@ -230,20 +278,6 @@ app.post("/score/test", async (req, res) => {
   }
 });
 
-/*//////////////////////////////////////////////////////////////
-  GET /score/:wallet
-  
-  NEW BEHAVIOUR:
-  1. Check if wallet has an SBT already minted onchain
-     → If yes, return the onchain data (hasScore: true, minted: true)
-  2. If no SBT, compute score on-the-fly from wallet history
-     → Return the score instantly (hasScore: true, minted: false)
-  
-  This means ANY wallet is scoreable without connecting MetaMask.
-  "minted: false" means the score is a preview — they need to
-  sign a tx to make it permanent onchain.
-//////////////////////////////////////////////////////////////*/
-
 app.get("/score/:wallet", async (req, res) => {
   const { wallet } = req.params;
   if (!ethers.isAddress(wallet)) {
@@ -251,19 +285,19 @@ app.get("/score/:wallet", async (req, res) => {
   }
 
   try {
-    // Step 1: Check if they already have an SBT minted
     const provider = new ethers.JsonRpcProvider(BASE_SEPOLIA_RPC);
-    const sbtContract = new ethers.Contract(process.env.SKORE_SBT_ADDRESS, SBT_ABI, provider);
+    const sbtContract = new ethers.Contract(
+      process.env.SKORE_SBT_ADDRESS, SBT_ABI, provider
+    );
     const hasMintedSBT = await sbtContract.hasScore(wallet);
 
     if (hasMintedSBT) {
-      // Return the permanent onchain score
       const scoreData = await sbtContract.getScore(wallet);
       const label = await sbtContract.getScoreLabel(wallet);
       return res.json({
         wallet,
         hasScore: true,
-        minted: true, // permanently onchain as SBT
+        minted: true,
         score: Number(scoreData.score),
         label,
         lastUpdated: new Date(Number(scoreData.lastUpdated) * 1000).toISOString(),
@@ -274,7 +308,7 @@ app.get("/score/:wallet", async (req, res) => {
       });
     }
 
-    // Step 2: No SBT yet — compute score on-the-fly for any wallet
+    // No SBT — compute preview score on the fly
     console.log(`No SBT found for ${wallet}, computing preview score...`);
     const walletData = await fetchWalletData(wallet);
     const score = computeScore(walletData);
@@ -283,14 +317,14 @@ app.get("/score/:wallet", async (req, res) => {
     return res.json({
       wallet,
       hasScore: true,
-      minted: false, // preview only — not yet minted as SBT
+      minted: false,
       score,
       label,
       totalTransactions: walletData.totalTransactions,
       walletAgeMonths: walletData.ageMonths,
       hasDefiHistory: walletData.hasDefiHistory,
       chainCount: walletData.activeChains,
-      previewNote: "This is a live preview. Connect your wallet to mint this score permanently as a Soulbound Token on Base."
+      previewNote: "Live preview. Connect wallet to mint as Soulbound Token on Base."
     });
 
   } catch (error) {
@@ -307,11 +341,13 @@ app.post("/score", async (req, res) => {
   try {
     console.log(`\nScoring wallet: ${wallet}`);
     const walletData = await fetchWalletData(wallet);
-    console.log("Wallet data:", walletData);
     const score = computeScore(walletData);
     console.log(`Computed score: ${score}`);
     const txHash = await submitScoreToChain(wallet, score, walletData);
-    return res.json({ success: true, wallet, score, label: getLabel(score), walletData, txHash });
+    return res.json({
+      success: true, wallet, score,
+      label: getLabel(score), walletData, txHash
+    });
   } catch (error) {
     console.error("Scoring error:", error);
     return res.status(500).json({ error: "Scoring failed", details: error.message });
@@ -325,7 +361,7 @@ app.post("/score", async (req, res) => {
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Skore API running on port ${PORT}`);
-  console.log(`Health check: http://localhost:${PORT}/health`);
+  console.log(`Health: http://localhost:${PORT}/health`);
   console.log(`Score any wallet: GET http://localhost:${PORT}/score/0x...`);
 });
 
