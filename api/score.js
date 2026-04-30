@@ -134,51 +134,37 @@ async function fetchChainData(walletAddress, alchemyUrl, chainName) {
     const provider = new ethers.JsonRpcProvider(alchemyUrl);
     const txCount = await provider.getTransactionCount(walletAddress);
 
-    const balanceResponse = await fetch(alchemyUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "alchemy_getTokenBalances", params: [walletAddress] }),
-    });
-    const balanceData = await balanceResponse.json();
-    const tokens = balanceData.result?.tokenBalances
-      ?.filter(t => t.tokenBalance !== "0x0000000000000000000000000000000000000000000000000000000000000000")
-      ?.map(t => t.contractAddress) || [];
-
+    // Get OLDEST transactions first for accurate age
     const transferResponse = await fetch(alchemyUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        jsonrpc: "2.0", id: 2, method: "alchemy_getAssetTransfers",
-        params: [{ fromAddress: walletAddress, category: ["external", "erc20"], maxCount: "0x3e8", order: "asc" }],
+        jsonrpc: "2.0",
+        id: 2,
+        method: "alchemy_getAssetTransfers",
+        params: [{
+          fromAddress: walletAddress,
+          category: ["external", "erc20", "internal"],
+          maxCount: "0x64", // only need 100 — we just want the oldest
+          order: "asc",    // ASCENDING = oldest first
+          withMetadata: true, // includes block timestamp directly
+        }],
       }),
     });
+
     const transferData = await transferResponse.json();
     const transfers = transferData.result?.transfers || [];
 
+    // Use metadata timestamp directly — no need to fetch block
     let firstTxTimestamp = Date.now();
-    if (transfers.length > 0 && transfers[0].blockNum) {
+    if (transfers.length > 0 && transfers[0].metadata?.blockTimestamp) {
+      firstTxTimestamp = new Date(transfers[0].metadata.blockTimestamp).getTime();
+    } else if (transfers.length > 0 && transfers[0].blockNum) {
       const block = await provider.getBlock(parseInt(transfers[0].blockNum, 16));
       if (block) firstTxTimestamp = block.timestamp * 1000;
     }
 
-    const hasDefiInteraction = transfers.some(tx =>
-      DEFI_PROTOCOLS.some(p => tx.to?.toLowerCase() === p.toLowerCase())
-    );
-
-    const volumeUSD = transfers.reduce((acc, tx) => {
-      if (tx.asset === "ETH" && tx.value) return acc + (tx.value * 2000);
-      return acc;
-    }, 0);
-
-    console.log(`${chainName}: ${txCount} txs, ${tokens.length} tokens, defi: ${hasDefiInteraction}`);
-    return { txCount, firstTxTimestamp, hasDefiInteraction, tokens, volumeUSD, liquidations: 0 };
-
-  } catch (error) {
-    console.error(`Error fetching ${chainName} data:`, error.message);
-    return { txCount: 0, firstTxTimestamp: Date.now(), hasDefiInteraction: false, tokens: [], volumeUSD: 0, liquidations: 0 };
-  }
-}
-
+  
 /*//////////////////////////////////////////////////////////////
                     BLOCKCHAIN INTERACTION
 //////////////////////////////////////////////////////////////*/
